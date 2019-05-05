@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 13:32:05 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 16:54:13
+ * @Last Modified time: 2019-05-05 17:52:14
  * @Types 导航栏组件
  */
 
@@ -44,6 +44,7 @@ export default {
     position fixed
     top 0
     right 0
+    box-shadow 0 1px 4px rgba(0,21,41,.08)
 
     .trigger {
         font-size 18px

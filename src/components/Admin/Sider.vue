@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 13:27:21 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 16:59:19
+ * @Last Modified time: 2019-05-05 17:55:20
  * @Types 侧边栏组件
  */
 
@@ -106,7 +106,7 @@ export default {
     position fixed
     left 0
     top 0
-    
+
     .logo {
         padding 24px 0
         img {
