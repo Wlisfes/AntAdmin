@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 13:27:21 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 17:55:20
+ * @Last Modified time: 2019-05-05 21:28:33
  * @Types 侧边栏组件
  */
 
@@ -22,7 +22,11 @@
                 <img src="https://avatars3.githubusercontent.com/u/32263302?s=460&v=4" />
             </router-link>
         </div>
-        <a-menu theme="light" mode="inline" :defaultOpenKeys="['5']" :defaultSelectedKeys="['5-1']">
+        <a-menu theme="light" 
+                mode="inline" 
+                :defaultOpenKeys="['5']" 
+                :defaultSelectedKeys="['5-1']"
+                style="border-right: none;">
             <a-sub-menu v-for="m in Menu" :key="m.key">
                 <span slot="title"><a-icon style="font-size: 16px;" :type="m.icon" /><span v-html="m.title"></span></span>
                 <a-menu-item v-for="c in m.children" :key="c.key">
@@ -106,7 +110,8 @@ export default {
     position fixed
     left 0
     top 0
-
+    border-right 1px solid rgba(210,210,210,.3)
+    
     .logo {
         padding 24px 0
         img {

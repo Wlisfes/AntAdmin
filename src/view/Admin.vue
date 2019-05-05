@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 11:24:52 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 17:08:56
+ * @Last Modified time: 2019-05-05 22:02:27
  * @Types 后台首页
  */
 
@@ -69,7 +69,8 @@ export default {
         .Content-View {
             min-height 100%
             margin 0 24px
-            background #ffffff
+            display flex
+            flex-direction column
         }
     }
 }
