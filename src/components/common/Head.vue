@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         backRouter() {
-            history.back()
+            this.$router.go(-1)
         }
     }
 }
@@ -41,6 +41,11 @@ export default {
     .back {
         padding 12px
         cursor pointer
+        &:hover {
+            i {
+                color rgb(24, 144, 255);
+            }
+        }
     }
     .divider {
         height 14px
