@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:22:13 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-06 23:09:15
+ * @Last Modified time: 2019-05-06 23:23:30
  * @Types 项目管理>项目列表界面
  */
 
@@ -86,7 +86,7 @@
                                     <template slot="title">
                                         <span>预览</span>
                                     </template>
-                                    <a :href="r.github" target="_blank">
+                                    <a :href="r.viewUrl || r.github" target="_blank">
                                         <a-icon type="eye" />
                                     </a>
                                 </a-tooltip>
@@ -246,8 +246,6 @@ export default {
                 user: '',
                 status: ''
             },
-            //load
-            spinloder: true,
             
             //弹窗配置
             modal: {
