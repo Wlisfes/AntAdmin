@@ -2,23 +2,44 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:16:46 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 16:17:25
+ * @Last Modified time: 2019-05-07 23:27:39
  * @Types 笔记管理>新增笔记界面
  */
 
 <template>
-    <div>
-        新增笔记界面
+    <div class="root">
+        <Head title="新增笔记"></Head>
+        <div class="Back-Content">
+            新增笔记界面
+        </div>
     </div>
 </template>
 
 <script>
+import Head from '../components/common/Head'
 export default {
-    
+    components: {
+        Head
+    }
 }
 </script>
 
 <style lang="stylus" scoped>
+.root {
+    margin 0 -24px
+    flex 1
+    display flex
+    flex-direction column
+    .Back-Content{
+        margin 24px 24px 0
+        flex 1
+        display flex
+        flex-direction column
+        background #ffffff
+        padding 24px 24px
 
+        
+    }
+}
 </style>
 

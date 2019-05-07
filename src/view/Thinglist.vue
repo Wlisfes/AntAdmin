@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:22:13 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-06 23:23:30
+ * @Last Modified time: 2019-05-07 23:16:32
  * @Types 项目管理>项目列表界面
  */
 
@@ -11,37 +11,36 @@
         <Head title="项目列表"></Head>
         <div class="Back-Content">
             <!-- 搜索 start -->
-            <a-form class="ant-advanced-search-form">
-                <a-row :gutter="24" style="padding-bottom: 6px;">
-                    <a-col :sm="24" :md="12" :xl="8" :xxl="6" style="margin-top: 24px">
-                        <a-form-item label='开发用户'>
-                            <a-select placeholder='请选择' v-model="search.user">
-                                <a-select-option value="lisfes">lisfes</a-select-option>
-                                <a-select-option value="CNinc">CNinc</a-select-option>
-                                <a-select-option value="茂茂">茂茂</a-select-option>
-                                <a-select-option value="nodemirai">nodemirai</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                    <a-col :sm="24" :md="12" :xl="8" :xxl="6" style="margin-top: 24px">
-                        <a-form-item label='使用状态'>
-                            <a-select placeholder='请选择' v-model="search.status">
-                                <a-select-option value="1">
-                                    <a-icon type="check-circle" style="color: #04be02" />
-                                    已发布
-                                </a-select-option>
-                                <a-select-option value="2">
-                                    <a-icon type="exclamation-circle" style="color: #1890ff" />
-                                    已关闭
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                    <a-col :sm="24" :md="12" :xl="8" :xxl="6" style="margin-top: 24px">
-                        <a-button type="primary" style="margin-top: 3.5px;" html-type="submit" @click="handleSearch">查询</a-button>
-                        <a-button  style="margin-top: 3.5px;margin-left: 12px;" @click="handleReset">重置</a-button>
-                    </a-col>
-                </a-row>
+            <a-form layout="inline" style="margin-bottom: 12px;">
+                <a-form-item label='开发用户'>
+                    <a-select placeholder='请选择' v-model="search.user" style="min-width: 174px;">
+                        <a-select-option value="lisfes">lisfes</a-select-option>
+                        <a-select-option value="CNinc">CNinc</a-select-option>
+                        <a-select-option value="茂茂">茂茂</a-select-option>
+                        <a-select-option value="nodemirai">nodemirai</a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label='使用状态'>
+                    <a-select placeholder='请选择' v-model="search.status" style="min-width: 174px;">
+                        <a-select-option value="1">
+                            <a-icon type="check-circle" style="color: #04be02" />
+                            已发布
+                        </a-select-option>
+                        <a-select-option value="2">
+                            <a-icon type="exclamation-circle" style="color: #1890ff" />
+                            已关闭
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-button type="primary" style="margin: 3.5px 6px 0"  icon='plus-circle'>
+                    新增
+                </a-button>
+                <a-button icon='scan' type="primary"  style="margin: 3.5px 6px 0" html-type="submit" @click="handleSearch">
+                    查询
+                </a-button>
+                <a-button icon='sync' style="margin: 3.5px 6px 0" @click="handleReset">
+                    重置
+                </a-button>
             </a-form>
             <!-- 搜索 end -->
 
@@ -335,7 +334,7 @@ export default {
         display flex
         flex-direction column
         background #ffffff
-        padding 0 24px 24px
+        padding 24px 24px
         .card-Title {
             height 64px
             word-wrap break-word
@@ -348,12 +347,6 @@ export default {
             .anticon {
                 font-size 16px
                 padding 0 14px
-            }
-        }
-        .ant-advanced-search-form {
-            .ant-form-item {
-                display flex
-                margin-bottom 0
             }
         }
     }
