@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:19:40 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-07 23:17:35
+ * @Last Modified time: 2019-05-09 00:03:58
  * @Types 标签管理>标签列表界面
  */
 
@@ -31,7 +31,7 @@
                         </a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-button type="primary" style="margin: 3.5px 6px 0" icon='plus-circle'>
+                <a-button type="primary" style="margin: 3.5px 6px 0" icon='plus-circle'  @click="handleNew">
                     新增
                 </a-button>
                 <a-button type="primary" style="margin: 3.5px 6px 0" html-type="submit" icon='scan' @click="handleSearch">
@@ -43,50 +43,85 @@
             </a-form>
 
             <div class="back-Table">
-                <a-table 
-                    :columns="columns" 
-                    :dataSource="data" 
-                    bordered
-                    size="middle"
-                    :loading="Tableload"
-                    :defaultExpandAllRows="false"
-                >
+                <a-table :columns="columns" :dataSource="data" bordered>
                     <span slot="name" slot-scope="name">
                         <a-tag color="blue" :key="name">{{ name }}</a-tag>
                     </span>
+
                     <span slot="status" slot-scope="status">
                         <a-tag :color="status == 1 ? '#04be02' : '#1890ff'" :key="status">
                             {{ status | tags }}
                         </a-tag>
                     </span>
-                    <template slot="modify" slot-scope="modify, coll">
-                        <a-tooltip placement="top" >
-                            <template slot="title">
-                                <span>编辑</span>
+
+                    <template v-for="col in ['descr']" :slot="col" slot-scope="text, record">
+                        <div :key="col" style="display: flex;align-items: center;">
+                            <template v-if="record.editable">
+                                <a-input
+                                    style="margin: -5px 0"
+                                    :value="text"
+                                    @change="e => handleChange(e.target.value, record.key, col)"
+                                />
+                                <a-button 
+                                    type="danger"
+                                    icon='close-circle' 
+                                    @click="() => cancel(record.key)" 
+                                    style="margin-left: 8px;"
+                                >   
+                                    取消
+                                </a-button>
                             </template>
-                            <a-button type="primary" icon='edit' style="margin: 0 6px;" @click="edit(coll)"></a-button>
-                        </a-tooltip>
+                            <template v-else>{{text}}</template>
+                        </div>
+                    </template>
+
+                    <template slot="modify" slot-scope="text, record">
+                        <span v-if="record.editable">
+                            <a-button icon='check-circle' @click="() => save(record.key)">保存</a-button>
+                        </span>
+                        <span v-else>
+                            <a-button type="primary" icon='edit' @click="() => edit(record.key)">编辑</a-button>
+                        </span>
                         <a-dropdown>
                             <a-menu slot="overlay">
-                                <a-menu-item key="1" @click="setting({ key: 1, coll })">
+                                <a-menu-item key="1" @click="setting({ key: 1, record })">
                                     <a-icon type="check-circle" style="color: #04be02" />
                                     发布
                                 </a-menu-item>
-                                <a-menu-item key="2" @click="setting({ key: 2, coll })">
+                                <a-menu-item key="2" @click="setting({ key: 2, record })">
                                     <a-icon type="exclamation-circle" style="color: #1890ff" />
                                     关闭
                                 </a-menu-item>
-                                <a-menu-item key="3" @click="setting({ key: 3, coll })">
-                                    <a-icon type="close-circle" style="color: #f5222d" />
+                                <a-menu-item key="3" @click="setting({ key: 3, record })">
+                                    <a-icon type="delete" style="color: #f5222d" />
                                     删除
                                 </a-menu-item>
                             </a-menu>
-                            <a-button type="primary" icon='setting' style="margin: 0 6px;"></a-button>
+                            <a-button type="primary" icon='setting' style="margin-left: 6px;"></a-button>
                         </a-dropdown>
                     </template>
                 </a-table>
             </div>
         </div>
+
+        <!-- 新增弹窗 start -->
+        <a-modal
+            title="新增项目"
+            v-model="pushModal.visible"
+            @ok="(e) => pushModal.visible = false"
+            okText="确定"
+            cancelText="取消"
+        >
+            <a-form>
+                <a-form-item  label="类型">
+                    <a-input v-model="pushModal.name" placeholder='请输入标签' />
+                </a-form-item>
+                <a-form-item label="Avatar">
+                    <a-input v-model="pushModal.descr" placeholder='请输入标签描述' />
+                </a-form-item>
+            </a-form>
+        </a-modal>
+        <!-- 新增弹窗 end -->
     </div>
 </template>
 
@@ -97,34 +132,38 @@ const columns = [
     {
         title: '类型',
         dataIndex: 'name',
-        key: 'name',
+        width: '10%',
+        align: 'center',
         scopedSlots: { customRender: 'name' }
-    },
+    }, 
     {
         title: '创建时间',
-        key: 'date',
-        dataIndex: 'date'
+        dataIndex: 'date',
+        align: 'center',
+        width: '10%'
     },
     {
         title: '作者',
-        key: 'user',
-        dataIndex: 'user'
+        dataIndex: 'user',
+        align: 'center',
+        width: '10%'
     },
     {
         title: '状态',
-        key: 'status',
         dataIndex: 'status',
+        width: '5%',
+        align: 'center',
         scopedSlots: { customRender: 'status' }
     },
     {
         title: '描述',
-        key: 'descr',
-        dataIndex: 'descr'
-    },
+        dataIndex: 'descr',
+        scopedSlots: { customRender: 'descr' }
+    }, 
     {
         title: '操作',
-        key: 'modify',
         dataIndex: 'modify',
+        width: '20%',
         scopedSlots: { customRender: 'modify' }
     }
 ]
@@ -187,8 +226,21 @@ const data = [
         descr: 'QuickApp是由国内十大手机厂商联合开发的移动互联网新型应用生态。'
     }
 ]
+
+// const data = []
+// for (let i = 0; i < 100; i++) {
+//     data.push({
+//         key: i.toString(),
+//         name: 'Vue',
+//         user: 'Admin',
+//         status: 1,
+//         date: '2018-4-16',
+//         descr: '尤雨溪开发的专注于构建用户界面的渐进式框架。' + i
+//     })
+// }
 export default {
     data () {
+        this.cacheData = data.map(item => ({ ...item }))
         return {
             data,
             columns,
@@ -198,6 +250,12 @@ export default {
             search: {
                 user: '',
                 status: ''
+            },
+            //新增弹窗配置
+            pushModal: {
+                visible: false,
+                name: '',
+                descr: ''
             }
         }
     },
@@ -207,13 +265,9 @@ export default {
         }
     },
     methods: {
-        //设置
-        setting(e) {
-            console.log(e)
-        },
-        //编辑
-        edit(e) {
-            console.log(e)
+        //新增
+        handleNew() {
+            this.pushModal.visible = true
         },
         //搜索
         handleSearch() {
@@ -225,6 +279,56 @@ export default {
         handleReset() {
             this.search.status = ''
             this.search.user = ''
+        },
+        //设置
+        setting({ key, record }) {
+            let newData = [...this.data]
+            let target = newData.filter(item => record.key === item.key)[0]
+            if (key == 1 || key == 2) {
+                target.status = key
+            } else {
+                // delete target
+            }
+            this.data = newData
+            this.cacheData = newData.map(item => ({ ...item }))
+        },
+        //编辑状态changhe事件
+        handleChange (value, key, column) {
+            const newData = [...this.data]
+            const target = newData.filter(item => key === item.key)[0]
+            if (target) {
+                target[column] = value
+                this.data = newData
+            }
+        },
+        //编辑
+        edit (key) {
+            const newData = [...this.data]
+            const target = newData.filter(item => key === item.key)[0]
+            if (target) {
+                target.editable = true
+                this.data = newData
+            }
+        },
+        //保存编辑
+        save (key) {
+            const newData = [...this.data]
+            const target = newData.filter(item => key === item.key)[0]
+            if (target) {
+                delete target.editable
+                this.data = newData
+                this.cacheData = newData.map(item => ({ ...item }))
+            }
+        },
+        //取消编辑
+        cancel (key) {
+            const newData = [...this.data]
+            const target = newData.filter(item => key === item.key)[0]
+            if (target) {
+                Object.assign(target, this.cacheData.filter(item => key === item.key)[0])
+                delete target.editable
+                this.data = newData
+            }
         }
     },
     components: {

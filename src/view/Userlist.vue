@@ -10,13 +10,14 @@
     <div class="root">
         <Head title="用户列表"></Head>
         <div class="Back-Content">
-            用户列表界面
+            
         </div>
     </div>
 </template>
 
 <script>
 import Head from '../components/common/Head'
+
 export default {
     components: {
         Head

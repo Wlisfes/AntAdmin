@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:22:13 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-07 23:16:32
+ * @Last Modified time: 2019-05-09 00:01:26
  * @Types 项目管理>项目列表界面
  */
 
@@ -20,19 +20,32 @@
                         <a-select-option value="nodemirai">nodemirai</a-select-option>
                     </a-select>
                 </a-form-item>
+                <a-form-item label='项目类型'>
+                    <a-select placeholder='请选择' v-model="search.types" style="min-width: 174px;">
+                        <a-select-option value="Vue">
+                            Vue
+                        </a-select-option>
+                        <a-select-option value="React">
+                            React
+                        </a-select-option>
+                        <a-select-option value="Nodejs">
+                            Nodejs
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
                 <a-form-item label='使用状态'>
                     <a-select placeholder='请选择' v-model="search.status" style="min-width: 174px;">
-                        <a-select-option value="1">
+                        <a-select-option value="true">
                             <a-icon type="check-circle" style="color: #04be02" />
                             已发布
                         </a-select-option>
-                        <a-select-option value="2">
+                        <a-select-option value="false">
                             <a-icon type="exclamation-circle" style="color: #1890ff" />
                             已关闭
                         </a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-button type="primary" style="margin: 3.5px 6px 0"  icon='plus-circle'>
+                <a-button type="primary" style="margin: 3.5px 6px 0"  icon='plus-circle' @click="handleNew">
                     新增
                 </a-button>
                 <a-button icon='scan' type="primary"  style="margin: 3.5px 6px 0" html-type="submit" @click="handleSearch">
@@ -61,7 +74,7 @@
                                             关闭
                                         </a-menu-item>
                                         <a-menu-item key="3" @click="setting({ key: 3, id: r.id })">
-                                            <a-icon type="close-circle" style="color: #f5222d" />
+                                            <a-icon type="delete" style="color: #f5222d" />
                                             删除
                                         </a-menu-item>
                                     </a-menu>
@@ -104,6 +117,7 @@
                                 <a-avatar slot="avatar" :src="r.Avatar" />
                             </a-card-meta>
                             <div class="card-Title" v-html="r.content"></div>
+                            <a-tag color="blue" style="margin-top: 12px;">Vue</a-tag>
                         </a-card>
                     </a-col>
                 </a-row>
@@ -111,33 +125,61 @@
             <!-- 列表 end -->
         </div>
 
-        <!-- 弹窗 start -->
+        <!-- 编辑弹窗 start -->
         <a-modal
             title="项目编辑"
-            v-model="modal.visible"
+            v-model="editModal.visible"
             @ok="handleOk"
             okText="确定"
             cancelText="取消"
         >
             <a-form>
                 <a-form-item v-bind="formItemLayout" label="Title">
-                    <a-input v-model="modal.title" />
+                    <a-input v-model="editModal.title" />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="Avatar">
-                    <a-input v-model="modal.Avatar" />
+                    <a-input v-model="editModal.Avatar" />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="GitHub">
-                    <a-input v-model="modal.github" />
+                    <a-input v-model="editModal.github" />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="viewUrl">
-                    <a-input v-model="modal.viewUrl" />
+                    <a-input v-model="editModal.viewUrl" />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="Contenr">
-                    <a-input v-model="modal.content" />
+                    <a-input v-model="editModal.content" />
                 </a-form-item>
             </a-form>
         </a-modal>
-        <!-- 弹窗 end -->
+        <!-- 编辑弹窗 end -->
+
+        <!-- 新增弹窗 start -->
+        <a-modal
+            title="新增项目"
+            v-model="pushModal.visible"
+            @ok="handleOk"
+            okText="确定"
+            cancelText="取消"
+        >
+            <a-form>
+                <a-form-item v-bind="formItemLayout" label="Title">
+                    <a-input v-model="pushModal.title" placeholder='请输入项目标题' />
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="Avatar">
+                    <a-input v-model="pushModal.Avatar" placeholder='请输入项目标题' />
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="GitHub">
+                    <a-input v-model="pushModal.github" />
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="viewUrl">
+                    <a-input v-model="pushModal.viewUrl" />
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="Contenr">
+                    <a-input v-model="pushModal.content" />
+                </a-form-item>
+            </a-form>
+        </a-modal>
+        <!-- 新增弹窗 end -->
     </div>
 </template>
 
@@ -243,11 +285,22 @@ export default {
             //搜索配置
             search: {
                 user: '',
-                status: ''
+                status: '',
+                types: ''
             },
             
-            //弹窗配置
-            modal: {
+            //编辑弹窗配置
+            editModal: {
+                visible: false,
+                title: '',
+                Avatar: '',
+                id: null,
+                content: '',
+                viewUrl: '',
+                github: ''
+            },
+            //新增弹窗配置
+            pushModal: {
                 visible: false,
                 title: '',
                 Avatar: '',
@@ -287,7 +340,9 @@ export default {
         },
         //搜索
         handleSearch() {
+            let rowul = this.rowul
             let { status, user } = this.search
+            
             const hide = this.$message.loading('查询中  ···', 0)
             setTimeout(hide, 5000)
         },
@@ -298,23 +353,40 @@ export default {
         },
         //设置
         setting({ key, id }) {
-            console.log(key, id)
+            let rowul = this.rowul
+            if(key == 1 || key == 2) {
+                this.rowul = rowul.map(item => {
+                    if(item.id === id) {
+                        key == 1 ? item.status = true : item.status = false
+                    }
+                    return item
+                })
+            }
+            
         },
         //编辑
         edit({ Avatar,content,github,id,title,viewUrl }) {
-            this.modal.Avatar = Avatar
-            this.modal.content = content
-            this.modal.github = github
-            this.modal.id = id
-            this.modal.title = title
-            this.modal.visible = true
+            this.editModal.Avatar = Avatar
+            this.editModal.content = content
+            this.editModal.github = github
+            this.editModal.id = id
+            this.editModal.title = title
+            this.editModal.visible = true
         },
         //编辑确定
         handleOk() {
-            let { Avatar,content,github,id,title } = this.modal
-            this.modal.visible = false
+            let rowul = this.rowul
+            let editModal = this.editModal
+            
+            this.rowul = rowul.map(item => {
+                return item.id === editModal.id ? editModal : item
+            })
+            this.editModal.visible = false
+        },
+        //新增
+        handleNew() {
+            this.pushModal.visible = true
         }
-        
     },
     components: {
         Head
