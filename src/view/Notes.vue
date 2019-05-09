@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:16:46 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-07 23:27:39
+ * @Last Modified time: 2019-05-09 22:55:35
  * @Types 笔记管理>新增笔记界面
  */
 
@@ -10,16 +10,54 @@
     <div class="root">
         <Head title="新增笔记"></Head>
         <div class="Back-Content">
-            新增笔记界面
+            <a-form layout="inline" style="margin-bottom: 24px;">
+                <a-form-item label="标题">
+                    <a-input
+                        v-decorator="[
+                        'note',
+                            {rules: [{ required: true, message: 'Please input your note!' }]}
+                        ]"
+                    />
+                </a-form-item>
+            </a-form>
+            
+            <mark-down
+                ref="markdown"
+                :theme="markdown.theme"
+                :mode="markdown.mode" 
+                :autoSave="markdown.autoSave" 
+                :initialValue="markdown.initialValue"
+                @on-save="save"
+            />
+            
         </div>
     </div>
 </template>
 
 <script>
 import Head from '../components/common/Head'
+import MarkDown  from 'vue-meditor'
 export default {
+    data () {
+        return {
+            form: this.$form.createForm(this),
+            //编辑器配置
+            markdown: {
+                theme: "OneDark",
+                mode: 1,
+                autoSave: false,
+                initialValue: ``
+            }
+        }
+    },
+    methods: {
+        save(e) {
+            console.log(e)
+        }  
+    },
     components: {
-        Head
+        Head,
+        MarkDown
     }
 }
 </script>

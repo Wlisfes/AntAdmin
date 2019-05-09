@@ -137,9 +137,6 @@
                 <a-form-item v-bind="formItemLayout" label="Title">
                     <a-input v-model="editModal.title" />
                 </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="Avatar">
-                    <a-input v-model="editModal.Avatar" />
-                </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="GitHub">
                     <a-input v-model="editModal.github" />
                 </a-form-item>
@@ -165,17 +162,14 @@
                 <a-form-item v-bind="formItemLayout" label="Title">
                     <a-input v-model="pushModal.title" placeholder='请输入项目标题' />
                 </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="Avatar">
-                    <a-input v-model="pushModal.Avatar" placeholder='请输入项目标题' />
-                </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="GitHub">
-                    <a-input v-model="pushModal.github" />
+                    <a-input v-model="pushModal.github" placeholder='请输入Github地址' />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="viewUrl">
-                    <a-input v-model="pushModal.viewUrl" />
+                    <a-input v-model="pushModal.viewUrl" placeholder='请输入预览地址' />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="Contenr">
-                    <a-input v-model="pushModal.content" />
+                    <a-input v-model="pushModal.content" placeholder='请输入项目描述' />
                 </a-form-item>
             </a-form>
         </a-modal>
