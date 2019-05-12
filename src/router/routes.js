@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 11:22:56 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 22:08:01
+ * @Last Modified time: 2019-05-12 12:26:37
  * @Types 界面路由
  */
 
@@ -20,13 +20,19 @@ export default [
         path: '/',
         name: 'admin',
         component: Admin,
-        redirect: '/thinglist',
+        redirect: '/user',
         children: [
             {
                 path: '/main',
                 name: 'main',
                 Title: '主页',
                 component: () => import('../view/Main.vue')
+            },
+            {
+                path: '/user',
+                name: 'user',
+                Title: '用户注册',
+                component: () => import('../view/User.vue')
             },
             {
                 path: '/userlist',

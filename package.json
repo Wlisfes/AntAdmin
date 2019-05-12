@@ -13,6 +13,7 @@
     "core-js": "^2.6.5",
     "highlight.js": "^9.15.6",
     "js-cookie": "^2.2.0",
+    "md5": "^2.2.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue": "^2.6.10",

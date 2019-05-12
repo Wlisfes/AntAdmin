@@ -2,7 +2,7 @@
  * @Author: 情雨随风 
  * @Date: 2019-05-05 22:24:18 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-05 22:24:46
+ * @Last Modified time: 2019-05-11 01:01:19
  * @Types axios配置
  */
 
@@ -11,7 +11,7 @@ import axios from 'axios'
 import logo from './logo'
 
 
-axios.defaults.baseURL='http://localhost:4000'
+axios.defaults.baseURL='http://localhost:9999'
 // axios.defaults.withCredentials = true
 
 
