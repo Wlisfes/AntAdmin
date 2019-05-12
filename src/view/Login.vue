@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 11:25:39 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-11 01:05:54
+ * @Last Modified time: 2019-05-12 14:48:37
  * @Types 登录界面
  */
 
@@ -64,7 +64,6 @@ export default {
                     {
                         rules: [
                             { required: true, message: '用户名不能为空！' },
-                            { min: 4, max: 8, message: '用户名长度必须在4~8位之间！' }
                         ]
                     }
                 ],
@@ -72,8 +71,7 @@ export default {
                     "password",
                     {
                         rules: [
-                            { required: true, message: '密码不能为空！' },
-                            { min: 6, max: 20, message: '密码长度必须在3~20位之间！' }
+                            { required: true, message: '密码不能为空！' }
                         ]
                     }
                 ]
