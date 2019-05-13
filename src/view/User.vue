@@ -2,7 +2,7 @@
  * @Author: 情雨随风 
  * @Date: 2019-05-12 12:24:01 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-12 19:58:22
+ * @Last Modified time: 2019-05-13 17:46:24
  * @Types 用户注册界面
  */
 
@@ -38,7 +38,7 @@
                     <a-input-number v-decorator="['age', { initialValue: 18 }]" />
                 </a-form-item>
                 <a-form-item label="说明" v-bind="itemClo">
-                    <a-textarea v-decorator="['descr']" :autosize="{ minRows: 4, maxRows: 4 }" />
+                    <a-textarea v-decorator="formRules.descr" :autosize="{ minRows: 4, maxRows: 4 }" />
                 </a-form-item>
                 <a-form-item label="头像" v-bind="itemClo">
                     <a-upload
@@ -53,9 +53,6 @@
                             <a-icon type="plus" />
                             <div class="ant-upload-text">Upload</div>
                         </div>
-                        <!-- <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                            <img alt="example" style="width: 100%" :src="previewImage" />
-                        </a-modal> -->
                     </a-upload>
                 </a-form-item>
 
@@ -114,9 +111,15 @@ export default {
                             { required: true, message: '昵称不能为空！' }
                         ]
                     }
+                ],
+                descr: [
+                    'descr',
+                    {
+                        rules: [
+                            { required: true, message: '用户描述必填！' }
+                        ]
+                    }
                 ]
-
-
             },
             previewVisible: false,
             previewImage: '',
@@ -128,12 +131,32 @@ export default {
             e.preventDefault();
                 this.form.validateFields((err, values) => {
                     if (!err) {
-                        console.log('Received values of form: ', values);
+                        this.__AdminEnrolment(values)
+                        console.log(values)
                     }
                 });
         },
+        async __AdminEnrolment(formValue) {
+            let { Admin,age,descr,name,nickName,password,sex,upload } = formValue
+            try {
+                let res = await this.Api.AdminEnrolment({
+                    Admin: '',
+                    age: '',
+                    descr,
+                    name,
+                    nickName,
+                    password,
+                    sex,
+                    Avatar: upload && upload.file.response.url ? upload.file.response.url : ''
+                })
+                
+                console.log(res)
+            } catch (error) {
+                
+            }
+        },
         handleCancel () {
-            his.previewVisible = false
+            this.previewVisible = false
         },
         handlePreview (file) {
             this.previewImage = file.url || file.thumbUrl
@@ -142,7 +165,6 @@ export default {
         handleChange ({ fileList }) {
             this.fileList = fileList
         }
-        
     },
     components: {
         Head
@@ -164,7 +186,15 @@ export default {
         background #ffffff
         padding 24px 24px
 
-        
+        .ant-upload-select-picture-card i {
+            font-size: 32px;
+            color: #999;
+        }
+
+        .ant-upload-select-picture-card .ant-upload-text {
+            margin-top: 8px;
+            color: #666;
+        }
     }
 }
 </style>
