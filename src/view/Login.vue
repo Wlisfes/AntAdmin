@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 11:25:39 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-12 14:48:37
+ * @Last Modified time: 2019-05-14 22:22:33
  * @Types 登录界面
  */
 
@@ -21,7 +21,7 @@
                 @submit="handleSubmit"
             >
                 <a-form-item>
-                    <a-input size="large" placeholder="admin" v-decorator="rules.username">
+                    <a-input size="large" placeholder="admin" v-decorator="rules.name">
                     <a-icon slot="prefix" type="user" />
                     </a-input>
                 </a-form-item>
@@ -53,14 +53,13 @@
 
 <script>
 export default {
-    name: 'login',
     data() {
         return {
             logging: false,
             form: this.$form.createForm(this),
             rules: {
-                username: [
-                    "username",
+                name: [
+                    "name",
                     {
                         rules: [
                             { required: true, message: '用户名不能为空！' },
@@ -83,19 +82,30 @@ export default {
             e.preventDefault()
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    this.AdminEnrolment(values)
+                    this.AdminLogin(values)
                 }
             })
         },
         //注册
-        async AdminEnrolment({ username,password }) {
+        async AdminLogin({ name,password }) {
             try {
-                var res = await this.Api.AdminEnrolment({
-                    username,password
+                this.logging = true
+                var res = await this.Api.AdminLogin({
+                    name,password
                 })
                 console.log(res)
+                
+                if (res.code === 200) {
+                    this.$message.success(res.message)
+                    this.Aux.setToken(res.data)
+                    this.$router.push({ path: `/` })
+                } else {
+                    this.$message.error(res.message)
+                }
+                this.logging = false
             } catch (error) {
-                console.error(error)
+                this.logging = false
+                this.$message.error('登录失败！')
                 return
             }
         }

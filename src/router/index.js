@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 11:16:18 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-11 12:51:14
+ * @Last Modified time: 2019-05-14 22:21:24
  * @Types router导出
  */
 
@@ -21,20 +21,22 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     const token = getToken()
-    // if (!token && to.name !== 'login') {
-    //     //未登录且要跳转的页面不是登录页
-    //     next({
-    //         name: 'login'
-    //     })
-    // } else if(!token && to.name === 'login') {
-    //     //未登陆且要跳转的页面是登录页
-    //     next()
-    // } else if(token && to.name === 'login') {
-    //     //已登录且要跳转的页面是登录页
-        
-    // } else {
-    //     next()
-    // }
+    if (!token && to.name !== 'login') {
+        //未登录且要跳转的页面不是登录页
+        next({
+            name: 'login'
+        })
+    } else if(!token && to.name === 'login') {
+        //未登陆且要跳转的页面是登录页
+        next()
+    } else if(token && to.name === 'login') {
+        //已登录且要跳转的页面是登录页
+        next({
+            name: 'admin'
+        })
+    } else {
+        next()
+    }
     next()
 })
 
