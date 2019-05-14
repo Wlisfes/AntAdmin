@@ -2,7 +2,7 @@
  * @Author: 情雨随风 
  * @Date: 2019-05-12 12:24:01 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-13 17:46:24
+ * @Last Modified time: 2019-05-14 14:45:11
  * @Types 用户注册界面
  */
 
@@ -140,8 +140,8 @@ export default {
             let { Admin,age,descr,name,nickName,password,sex,upload } = formValue
             try {
                 let res = await this.Api.AdminEnrolment({
-                    Admin: '',
-                    age: '',
+                    Admin,
+                    age,
                     descr,
                     name,
                     nickName,
