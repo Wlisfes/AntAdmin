@@ -2,7 +2,7 @@
  * @Author: 情雨随风 
  * @Date: 2019-05-12 12:24:01 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-14 14:45:11
+ * @Last Modified time: 2019-05-17 16:33:28
  * @Types 用户注册界面
  */
 
@@ -43,7 +43,7 @@
                 <a-form-item label="头像" v-bind="itemClo">
                     <a-upload
                         v-decorator="['upload']"
-                        action="http://localhost:9999/Admin/upload"
+                        action="http://localhost:9999/upload"
                         listType="picture-card"
                         :fileList="fileList"
                         @preview="handlePreview"

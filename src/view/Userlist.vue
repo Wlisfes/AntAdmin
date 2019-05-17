@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 16:11:53 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-11 14:39:06
+ * @Last Modified time: 2019-05-17 16:57:41
  * @Types 用户管理>用户列表界面
  */
 
@@ -38,7 +38,15 @@
             </a-form>
 
             <div class="back-Table">
-                <a-table :columns="columns" :dataSource="data" bordered size="middle">
+                <a-table 
+                    :columns="columns" 
+                    :dataSource="Table" 
+                    bordered 
+                    size="middle"
+                    :locale="{
+                        emptyText: '暂无数据'
+                    }"
+                >
                     <span slot="name" slot-scope="name">
                         <b :key="name">{{ name }}</b>
                     </span>
@@ -169,7 +177,7 @@ export default {
     data () {
         this.cacheData = data.map(item => ({ ...item }))
         return {
-            data,
+            Table: [],
             columns,
             Tableload: false,
 
@@ -188,6 +196,9 @@ export default {
             return key == 1 ? '已开放' : '已关闭'
         }
     },
+    created () {
+        this.__AdminAllUser()
+    },
     methods: {
         moment,
         //搜索
@@ -204,6 +215,25 @@ export default {
         //编辑
         edit (key) {
             
+        },
+        //获取所有用户
+        async __AdminAllUser() {
+            try {
+                let res = await this.Api.AdminAllUser()
+                
+                if(res.code === 200) {
+                    let Table = res.data.map((el, k) => {
+                            el['key'] = k
+                        return el
+                    })
+                    this.Table = Table
+                } else {
+                    this.$message.error(res.message)
+                }
+            } catch (error) {
+                this.$message.error(error)
+                return
+            }
         }
     },
     components: {
