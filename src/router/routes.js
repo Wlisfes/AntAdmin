@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 11:22:56 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-14 22:21:24
+ * @Last Modified time: 2019-05-17 17:03:56
  * @Types 界面路由
  */
 
@@ -20,7 +20,7 @@ export default [
         path: '/',
         name: 'admin',
         component: Admin,
-        redirect: '/user',
+        redirect: '/main',
         children: [
             {
                 path: '/main',

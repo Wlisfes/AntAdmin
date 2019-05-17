@@ -2,7 +2,7 @@
  * @Author: Parker 
  * @Date: 2019-05-05 13:27:21 
  * @Last Modified by: Parker
- * @Last Modified time: 2019-05-12 12:27:02
+ * @Last Modified time: 2019-05-17 17:06:11
  * @Types 侧边栏组件
  */
 
@@ -24,8 +24,8 @@
         </div>
         <a-menu theme="light" 
                 mode="inline" 
-                :defaultOpenKeys="['1']" 
-                :defaultSelectedKeys="['1-2']"
+                :defaultOpenKeys="['0']" 
+                :defaultSelectedKeys="['0-1']"
                 style="border-right: none;">
             <a-sub-menu v-for="m in Menu" :key="m.key">
                 <span slot="title"><a-icon style="font-size: 16px;" :type="m.icon" /><span v-html="m.title"></span></span>
@@ -47,6 +47,14 @@ export default {
     data () {
         return {
             Menu: [
+                {
+                    key: '0',
+                    icon: 'dashboard',
+                    title: '主页',
+                    children: [
+                        { key: '0-1', title: '首页', path: '/' }
+                    ]
+                },
                 {
                     key: '1',
                     icon: 'dashboard',
