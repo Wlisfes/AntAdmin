@@ -21,15 +21,9 @@
                 </a-form-item>
             </a-form>
             
-            <mark-down
-                ref="markdown"
-                :theme="markdown.theme"
-                :mode="markdown.mode" 
-                :autoSave="markdown.autoSave" 
-                :initialValue="markdown.initialValue"
-                @on-save="save"
-            />
             
+            <MarkDown>
+            </MarkDown>
         </div>
     </div>
 </template>

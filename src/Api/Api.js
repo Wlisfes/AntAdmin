@@ -12,7 +12,7 @@ import http from './http'
 export const AdminEnrolment = param => http(param, `/Admin/enrolment`, `POST`)
 
 //登录
-export const AdminLogin = param => http(param, `/Admin/login`, `POST`)
+export const ApiLoginUser = param => http(param, `/api/login/user`, `POST`)
 
 //获取所有用户
 export const AdminAllUser = param => http(param, `/Admin/alluser`)

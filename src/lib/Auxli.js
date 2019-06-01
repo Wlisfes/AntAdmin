@@ -8,24 +8,61 @@
 
 
 import Cookies from 'js-cookie'
+import crypto from 'crypto'
+import { TOKEN_KEY,CRYPTO_KEY } from './cofn'
 
+
+
+//是否登录状态
+export const isToken = () => {
+    const token = Cookies.get(TOKEN_KEY)
+    return token ? true : false
+}
 
 //获取Token
 export const getToken = () => {
-    const token = Cookies.get('token')
-    if(token)
-        return token
-    else
-        return false
+    const token = Cookies.get(TOKEN_KEY)
+    if(token) {
+        return JSON.parse(aesDecrypt(token, CRYPTO_KEY))
+    }  
+    else {
+        return null
+    }
+        
 }
 
 //储存Token
 export const setToken = token => {
-    Cookies.set('token', token, { expires: 1 })
+    let v = aesEncrypt(typeof token === 'string' ? token : JSON.stringify(token), CRYPTO_KEY)
+    Cookies.set(TOKEN_KEY, v, { expires: 1 })
 }
 
 //删除Token
 export const removeToken = () => {
-    Cookies.remove('token')
+    Cookies.remove(TOKEN_KEY)
     return false
+}
+
+/**
+ * 加密方法
+ * @param { String } data
+ * @param { String } key
+ */
+const aesEncrypt = (data, key) => {
+    const cipher = crypto.createCipher('aes192', key);
+    var crypted = cipher.update(data, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
+/**
+ * 解密方法
+ * @param { String } data
+ * @param { String } key
+ */
+const aesDecrypt = (data, key) => {
+    const decipher = crypto.createDecipher('aes192', key);
+    var decrypted = decipher.update(data, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
 }

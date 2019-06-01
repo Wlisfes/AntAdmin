@@ -22,7 +22,7 @@
                     @submit="handleSubmit"
                 >
                     <a-form-item>
-                        <a-input size="large" placeholder="admin" v-decorator="rules.name">
+                        <a-input size="large" placeholder="phone" v-decorator="rules.phone">
                         <a-icon slot="prefix" type="user" />
                         </a-input>
                     </a-form-item>
@@ -59,8 +59,8 @@ export default {
             logging: false,
             form: this.$form.createForm(this),
             rules: {
-                name: [
-                    "name",
+                phone: [
+                    "phone",
                     {
                         rules: [
                             { required: true, message: '用户名不能为空！' },
@@ -83,22 +83,21 @@ export default {
             e.preventDefault()
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    this.AdminLogin(values)
+                    this.ApiLoginUser(values)
                 }
             })
         },
-        //注册
-        async AdminLogin({ name,password }) {
+        //登录
+        async ApiLoginUser({ phone,password }) {
             try {
                 this.logging = true
-                var res = await this.Api.AdminLogin({
-                    name,password
+                var res = await this.Api.ApiLoginUser({
+                    phone,password
                 })
-                console.log(res)
                 
                 if (res.code === 200) {
-                    this.$message.success(res.message)
                     this.Aux.setToken(res.data)
+                    this.$message.success(res.message)
                     this.$router.push({ path: `/` })
                 } else {
                     this.$message.error(res.message)
