@@ -1,10 +1,11 @@
-/*
- * @Author: Parker 
- * @Date: 2019-05-05 16:22:13 
- * @Last Modified by: Parker
- * @Last Modified time: 2019-05-09 00:01:26
- * @Types 项目管理>项目列表界面
- */
+<!--
+ * @Date: 2019-06-04 16:07:16
+ * @Author: 情雨随风
+ * @LastEditors: 情雨随风
+ * @LastEditTime: 2019-06-04 16:08:05
+ * @Description: 友链
+ -->
+
 
 <template>
     <div id="Thin">
@@ -59,7 +60,68 @@
 
             <!-- 列表 start -->
             <div style="flex: 1;position: relative;">
-                
+                <a-row :gutter="24">
+                    <a-col :sm="24" :md="12" :xl="8" :xxl="6" v-for="r in rowul" :key="r.id">
+                        <a-card hoverable style="width: 100%; margin-top: 14px;">
+                            <template class="ant-card-actions" slot="actions">
+                                <a-dropdown>
+                                    <a-menu slot="overlay">
+                                        <a-menu-item key="1" @click="setting({ key: 1, id: r.id })">
+                                            <a-icon type="check-circle" style="color: #04be02" />
+                                            发布
+                                        </a-menu-item>
+                                        <a-menu-item key="2" @click="setting({ key: 2, id: r.id })">
+                                            <a-icon type="exclamation-circle" style="color: #1890ff" />
+                                            关闭
+                                        </a-menu-item>
+                                        <a-menu-item key="3" @click="setting({ key: 3, id: r.id })">
+                                            <a-icon type="delete" style="color: #f5222d" />
+                                            删除
+                                        </a-menu-item>
+                                    </a-menu>
+                                    <a-icon type="setting" />
+                                </a-dropdown>
+                                <a-tooltip placement="top" >
+                                    <template slot="title">
+                                        <span>编辑</span>
+                                    </template>
+                                    <a-icon type="edit" @click="edit(r)" />
+                                </a-tooltip>
+                                <a-tooltip placement="top" >
+                                    <template slot="title">
+                                        <span>GitHub</span>
+                                    </template>
+                                    <a :href="r.github" target="_blank">
+                                        <a-icon type="github" />
+                                    </a>
+                                </a-tooltip>
+                                <a-tooltip placement="top" >
+                                    <template slot="title">
+                                        <span>预览</span>
+                                    </template>
+                                    <a :href="r.viewUrl || r.github" target="_blank">
+                                        <a-icon type="eye" />
+                                    </a>
+                                </a-tooltip>
+                                <a-tooltip placement="top" >
+                                    <template slot="title">
+                                        <span v-html="r.status ? '已发布' : '未发布'"></span>
+                                    </template>
+                                    <a-icon :type="r.status ? 'check-circle' : 'exclamation-circle'" 
+                                        theme="filled" 
+                                        :style="{ color: r.status ? '#04be02' : '#1890ff' }"
+                                    />
+                                </a-tooltip>
+                            </template>
+                            <a-card-meta
+                                :title="r.title">
+                                <a-avatar slot="avatar" :src="r.Avatar" />
+                            </a-card-meta>
+                            <div class="card-Title" v-html="r.content"></div>
+                            <a-tag color="blue" style="margin-top: 12px;">Vue</a-tag>
+                        </a-card>
+                    </a-col>
+                </a-row>
             </div>
             <!-- 列表 end -->
         </div>
@@ -357,5 +419,3 @@ export default {
     }
 }
 </style>
-
-
