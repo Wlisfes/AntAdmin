@@ -8,53 +8,45 @@
 
 
 import axios from 'axios'
-import logo from './logo'
 
 
-axios.defaults.baseURL='http://localhost:9800'
-// axios.defaults.withCredentials = true
-
-
-//请求拦截器
-axios.interceptors.request.use(function (config) {
-    // 在发送请求之前做些什么
-
-    return config;
-}, function (error) {
-    // 对请求错误做些什么
-    return Promise.reject(error)
+// 创建 axios 实例
+const http = axios.create({
+    baseURL: '/api',    //代理地址
+    timeout: 6000       //请求超时时间
 })
 
-//响应拦截器
-axios.interceptors.response.use(
-    res => {
-        logo(res.request, res)
-        return res
+//请求拦截器
+http.interceptors.request.use((config) => {
+        // 在发送请求之前做些什么
+        return config;
     },
+    error => {
+        // 对请求错误做些什么
+        return Promise.reject(error)
+    }
+)
+
+//响应拦截器
+http.interceptors.response.use(
+    res => res.data,
     err => {
-        logo(err.request, err.response)
         return err
     }
 )
 
-const http = (param, url, type = 'GET') => {
-    return new Promise((resolve, reject) => {
-        if (type == 'GET') {
-            axios.get(url, param).then(res => {
-                resolve(res.data)
-            }).catch(e => {
-                reject(e)
-            })
-        }
-        else if(type == 'POST') {
-            axios.post(url, param).then(res => {
-                resolve(res.data)
-            }).catch(e => {
-                reject(e)
-            })
-        }
-    })
-}
+class request {
+    get(data, url) {
+        return http.get(url, {
+            params: {...data}
+        })
+    }
 
+    post(data, url) {
+        return http.post(url, {
+            ...data
+        })
+    }
+}
 
 export default http

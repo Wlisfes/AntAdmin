@@ -68,6 +68,7 @@ export default {
         padding-top 64px
         .Content-View {
             min-height 100%
+            min-width 960px
             margin 0 24px
             display flex
             flex-direction column

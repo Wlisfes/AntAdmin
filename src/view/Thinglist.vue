@@ -10,58 +10,10 @@
     <div id="Thin">
         <Head title="项目列表"></Head>
         <div class="Back-Content">
-            <!-- 搜索 start -->
-            <a-form layout="inline" style="margin-bottom: 12px;">
-                <a-form-item label='开发用户'>
-                    <a-select placeholder='请选择' v-model="search.user" style="min-width: 174px;">
-                        <a-select-option value="lisfes">lisfes</a-select-option>
-                        <a-select-option value="CNinc">CNinc</a-select-option>
-                        <a-select-option value="茂茂">茂茂</a-select-option>
-                        <a-select-option value="nodemirai">nodemirai</a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-form-item label='项目类型'>
-                    <a-select placeholder='请选择' v-model="search.types" style="min-width: 174px;">
-                        <a-select-option value="Vue">
-                            Vue
-                        </a-select-option>
-                        <a-select-option value="React">
-                            React
-                        </a-select-option>
-                        <a-select-option value="Nodejs">
-                            Nodejs
-                        </a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-form-item label='使用状态'>
-                    <a-select placeholder='请选择' v-model="search.status" style="min-width: 174px;">
-                        <a-select-option value="true">
-                            <a-icon type="check-circle" style="color: #04be02" />
-                            已发布
-                        </a-select-option>
-                        <a-select-option value="false">
-                            <a-icon type="exclamation-circle" style="color: #1890ff" />
-                            已关闭
-                        </a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-button type="primary" style="margin: 3.5px 6px 0"  icon='plus-circle' @click="handleNew">
-                    新增
-                </a-button>
-                <a-button icon='scan' type="primary"  style="margin: 3.5px 6px 0" html-type="submit" @click="handleSearch">
-                    查询
-                </a-button>
-                <a-button icon='sync' style="margin: 3.5px 6px 0" @click="handleReset">
-                    重置
-                </a-button>
-            </a-form>
-            <!-- 搜索 end -->
-
-            <!-- 列表 start -->
+            
             <div style="flex: 1;position: relative;">
-                
+                <div v-for="k in 200" :key="k" v-html="k"></div>
             </div>
-            <!-- 列表 end -->
         </div>
 
         <!-- 编辑弹窗 start -->
@@ -118,103 +70,10 @@
 
 <script>
 import Head from '../components/common/Head'
-
-let Txt = `在中台产品的研发过程中，会出现不同的设计规范和实现方式，但其中往往存在很多类似的页面和组件，这些类似的组件会被抽离成一套标准规范。`
 export default {
     data () {
         return {
-            rowul: [
-                {
-                    id: 1556951115727,
-                    title: 'lisfes',
-                    content: Txt,
-                    status: true,
-                    github: 'https://github.com/Wlisfes',
-                    viewUrl: '',
-                    Avatar: 'https://avatars3.githubusercontent.com/u/32263302?s=460&v=4'
-                },
-                {
-                    id: 1556951115728,
-                    title: 'CNine',
-                    content: Txt,
-                    status: true,
-                    github: 'https://github.com/Aysnine',
-                    viewUrl: '',
-                    Avatar: 'https://avatars2.githubusercontent.com/u/10137653?s=460&v=4'
-                },
-                {
-                    id: 1556951115729,
-                    title: '茂茂',
-                    content: Txt,
-                    status: false,
-                    github: 'https://github.com/maomao1996',
-                    viewUrl: '',
-                    Avatar: 'https://avatars1.githubusercontent.com/u/24606443?s=460&v=4'
-                },
-                {
-                    id: 1556951115730,
-                    title: 'nodemirai',
-                    content: Txt,
-                    status: true,
-                    github: 'https://github.com/NodeMirai',
-                    viewUrl: '',
-                    Avatar: 'https://avatars0.githubusercontent.com/u/20881290?s=460&v=4'
-                },
-                {
-                    id: 1556951115731,
-                    title: 'Nzix',
-                    content: Txt,
-                    status: true,
-                    github: 'https://github.com/nondanee',
-                    viewUrl: '',
-                    Avatar: 'https://avatars2.githubusercontent.com/u/26399680?s=460&v=4'
-                },
-                {
-                    id: 1556951115732,
-                    title: 'chanshiyu',
-                    content: Txt,
-                    status: false,
-                    github: 'https://github.com/chanshiyucx',
-                    viewUrl: '',
-                    Avatar: 'https://avatars0.githubusercontent.com/u/22583039?s=460&v=4'
-                },
-                {
-                    id: 1556951115733,
-                    title: 'Evan You',
-                    content: Txt,
-                    status: true,
-                    github: 'https://github.com/yyx990803',
-                    viewUrl: '',
-                    Avatar: 'https://avatars2.githubusercontent.com/u/499550?s=460&v=4'
-                },
-                {
-                    id: 1556951115734,
-                    title: '花裤衩',
-                    content: Txt,
-                    status: true,
-                    github: 'https://github.com/PanJiaChen',
-                    viewUrl: '',
-                    Avatar: 'https://avatars2.githubusercontent.com/u/8121621?s=460&v=4'
-                },
-                {
-                    id: 1556951115735,
-                    title: 'Modog',
-                    content: Txt,
-                    status: false,
-                    github: 'https://github.com/GabrielModog',
-                    viewUrl: '',
-                    Avatar: 'https://avatars3.githubusercontent.com/u/1420545?s=460&v=4'
-                },
-                {
-                    id: 1556951115736,
-                    title: 'Jialin Wu',
-                    content: Txt,
-                    status: false,
-                    github: 'https://github.com/jialin-wu-02',
-                    viewUrl: '',
-                    Avatar: 'https://avatars0.githubusercontent.com/u/44333110?s=460&v=4'
-                }
-            ],
+            rowul: [],
             //搜索配置
             search: {
                 user: '',

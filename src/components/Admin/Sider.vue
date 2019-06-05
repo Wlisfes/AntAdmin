@@ -14,7 +14,7 @@
         :width="256"
         theme="light"
         :collapsed="collapsed"
-        breakpoint="lg"
+        breakpoint="xl"
         @breakpoint="iSpoint"
     >
         <div class="logo">
@@ -24,8 +24,9 @@
         </div>
         <a-menu theme="light" 
                 mode="inline" 
-                :defaultOpenKeys="['0']" 
-                :defaultSelectedKeys="['0-1']"
+                :openKeys="openKeys"
+                :defaultSelectedKeys="defaultSelectedKeys"
+                @openChange="onOpenChange"
                 style="border-right: none;">
             <a-sub-menu v-for="m in Menu" :key="m.key">
                 <span slot="title"><a-icon style="font-size: 16px;" :type="m.icon" /><span v-html="m.title"></span></span>
@@ -98,14 +99,24 @@ export default {
                         { key: '5-1', title: '项目列表', path: '/thinglist' }
                     ]
                 }
-            ]
+            ],
+            openKeys: ['0'],
+            defaultSelectedKeys: ['0-1']
         }
     },
     methods: {
         iSpoint(e) {
             this.$emit('ispoint', e)
+        },
+        onOpenChange (openKeys) {
+            const latestOpenKey = openKeys.find(key => this.openKeys.indexOf(key) === -1)
+            const menu = this.Menu.map(el => el.key)
+            if (menu.indexOf(latestOpenKey) === -1) {
+                this.openKeys = openKeys
+            } else {
+                this.openKeys = latestOpenKey ? [latestOpenKey] : []
+            }
         }
-
     }
 
     
@@ -114,7 +125,8 @@ export default {
 
 <style lang="stylus" scoped>
 #Sider {
-    overflow auto
+    overflow-x hidden
+    overflow-y auto
     height 100vh
     position fixed
     left 0

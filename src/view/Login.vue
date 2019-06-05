@@ -8,7 +8,7 @@
 
 
 <template>
-    <div class="container">
+    <div class="container" :style="Style">
         <div class="content">
             <img class="logo" src="../assets/image/logo.png" alt="" />
             <div class="top">
@@ -22,12 +22,12 @@
                     @submit="handleSubmit"
                 >
                     <a-form-item>
-                        <a-input size="large" placeholder="phone" v-decorator="rules.phone">
+                        <a-input size="large" placeholder="手机号：18888888888" v-decorator="rules.phone">
                         <a-icon slot="prefix" type="user" />
                         </a-input>
                     </a-form-item>
                     <a-form-item>
-                        <a-input size="large" placeholder="888888" type="password" v-decorator="rules.password">
+                        <a-input size="large" placeholder="密码：000000" type="password" v-decorator="rules.password">
                         <a-icon slot="prefix" type="lock" />
                         </a-input>
                     </a-form-item>
@@ -53,47 +53,50 @@
 </template>
 
 <script>
+const backUrl = require("@/assets/image/topBG.png")
 export default {
     data() {
         return {
             logging: false,
             form: this.$form.createForm(this),
             rules: {
-                phone: [
-                    "phone",
-                    {
+                phone: [ "phone", {
                         rules: [
                             { required: true, message: '用户名不能为空！' },
-                        ]
-                    }
+                    ]}
                 ],
-                password: [
-                    "password",
-                    {
+                password: [ "password", {
                         rules: [
                             { required: true, message: '密码不能为空！' }
-                        ]
-                    }
+                    ]}
                 ]
             }
         }
+    },
+    computed: {
+        Style: () => ({
+            background: `url(${backUrl}) no-repeat center`,
+            backgroundSize: `cover`
+        })
     },
     methods: {
         handleSubmit(e) {
             e.preventDefault()
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    this.ApiLoginUser(values)
+                    this.login(values)
                 }
             })
         },
         //登录
-        async ApiLoginUser({ phone,password }) {
+        async login({ phone,password }) {
             try {
                 this.logging = true
-                var res = await this.Api.ApiLoginUser({
+                var res = await this.Api.login({
                     phone,password
                 })
+
+                console.log(res)
                 
                 if (res.code === 200) {
                     this.Aux.setToken(res.data)
@@ -104,9 +107,9 @@ export default {
                 }
                 this.logging = false
             } catch (error) {
+                console.log(error)
                 this.logging = false
                 this.$message.error('登录失败！')
-                return
             }
         }
     }
@@ -120,8 +123,8 @@ export default {
     height 100vh
     overflow auto
     // background #f0f2f5 url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg') no-repeat center 110px
-    background url('http://hacgapp.com/img/topBG.jpg') no-repeat center
-    background-size cover
+    // background url('http://hacgapp.com/img/topBG.jpg') no-repeat center
+    // background-size cover
     .content {
         padding 80px 0
         flex 1
