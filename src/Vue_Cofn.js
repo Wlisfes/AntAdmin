@@ -7,7 +7,7 @@
 
 
 import Ant from 'ant-design-vue';
-import * as Api  from './Api'
+import Api  from './Api'
 import * as Aux from './lib/Auxli'
 import 'ant-design-vue/dist/antd.css'
 import './assets/style/common.css'

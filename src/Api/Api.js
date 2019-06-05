@@ -9,11 +9,11 @@
 
 const Api = {
     
-    POST_USER: `/post/user`,
-    LOGIN_USER: `/login/user`,
-    ALL_USER: `/all/user`,
-    UPDATE_USER_PSSW: `/update/user/pssw`,
-    UPDATE_USER_PHONE: `/update/user/phone`,
+    POST_USER: `/post/user`,                                        //注册
+    LOGIN_USER: `/login/user`,                                      //登录
+    ALL_USER: `/all/user`,                                          //获取所有用户
+    UPDATE_USER_PSSW: `/update/user/pssw`,                          //修改密码
+    UPDATE_USER_PHONE: `/update/user/phone`,                        //修改手机号
 
 
 

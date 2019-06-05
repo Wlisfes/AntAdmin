@@ -92,7 +92,7 @@ export default {
         async login({ phone,password }) {
             try {
                 this.logging = true
-                var res = await this.Api.login({
+                var res = await this.Api.loginFN({
                     phone,password
                 })
 

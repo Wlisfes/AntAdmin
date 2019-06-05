@@ -13,7 +13,7 @@ import axios from 'axios'
 // 创建 axios 实例
 const http = axios.create({
     baseURL: '/api',    //代理地址
-    timeout: 6000       //请求超时时间
+    timeout: 2500       //请求超时时间
 })
 
 //请求拦截器
@@ -35,18 +35,21 @@ http.interceptors.response.use(
     }
 )
 
-class request {
-    get(data, url) {
+
+class Axios {
+    get(props, url) {
         return http.get(url, {
-            params: {...data}
+            params: { ...props }
         })
+
+        
     }
 
-    post(data, url) {
+    post(props, url) {
         return http.post(url, {
-            ...data
+            ...props
         })
     }
 }
 
-export default http
+export default new Axios();
