@@ -7,19 +7,13 @@
 
 
 import Ant from 'ant-design-vue';
-import * as Api  from './Api/Api'
+import * as Api  from './Api'
 import * as Aux from './lib/Auxli'
 import 'ant-design-vue/dist/antd.css'
 import './assets/style/common.css'
 
-export default class {
-    constructor(Vue) {
-        this.Vue = Vue
-    }
-
-    init() {
-        const Vue = this.Vue
-
+export default {
+    install(Vue) {
         Vue.config.productionTip = false
         Vue.prototype.Api = Api
         Vue.prototype.Aux = Aux

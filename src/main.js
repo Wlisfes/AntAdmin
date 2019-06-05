@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 import VueCofn from './Vue_Cofn'
 
-new VueCofn(Vue).init()
+Vue.use(VueCofn)
 
 new Vue({
   router,
