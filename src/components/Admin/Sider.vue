@@ -11,7 +11,7 @@
         id="Sider"
         :trigger="null"
         :collapsible="true"
-        :width="256"
+        :width="200"
         theme="light"
         :collapsed="collapsed"
         breakpoint="xl"
@@ -132,6 +132,7 @@ export default {
     left 0
     top 0
     border-right 1px solid rgba(210,210,210,.3)
+    z-index 1
     
     .logo {
         padding 24px 0

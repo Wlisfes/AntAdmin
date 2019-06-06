@@ -25,7 +25,7 @@ export default {
     },
     computed: {
         getWidth() {
-            return this.collapsed ? "calc(100% - 80px)" : "calc(100% - 256px)"
+            return this.collapsed ? "calc(100% - 80px)" : "calc(100% - 200px)"
         }
     },
     methods: {

@@ -11,22 +11,35 @@
         <Head title="项目列表"></Head>
         <div class="Back-Content">
             <div style="flex: 1;position: relative;">
-                <a-form layout="inline" :form="form" style="margin-bottom:16px;">
+                <a-form
+                    layout="inline"
+                    :form="form"
+                    @submit="handleSubmit"
+                    style="margin-bottom:16px;"
+                >
                     <a-form-item label="作者">
-                        <a-select placeholder='请选择' v-model="search.author"  style="min-width: 174px;">
+                        <a-select
+                            placeholder='请选择'
+                            v-model="search.author"
+                            style="min-width: 174px;"
+                        >
                             <a-select-option value="1">鱿鱼须</a-select-option>
                             <a-select-option value="2">斯图真美</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-form-item label="状态">
-                        <a-select placeholder='请选择' v-model="search.author"  style="min-width: 174px;">
+                        <a-select
+                            placeholder='请选择'
+                            v-model="search.author"
+                            style="min-width: 174px;"
+                        >
                             <a-select-option value="1">
-                                    <a-icon type="check-circle" style="color: #04be02" />
-                                    已开放
-                                </a-select-option>
-                                <a-select-option value="2">
-                                    <a-icon type="exclamation-circle" style="color: #1890ff" />
-                                    已关闭
+                                <a-icon type="check-circle" style="color: #04be02" />
+                                已开放
+                            </a-select-option>
+                            <a-select-option value="2">
+                                <a-icon type="exclamation-circle" style="color: #1890ff" />
+                                已关闭
                             </a-select-option>
                         </a-select>
                     </a-form-item>
@@ -36,7 +49,18 @@
                         </a-range-picker>
                     </a-form-item>
                     <a-form-item>
-                        <a-button type="primary" icon='search' html-type="submit">搜索</a-button>
+                        <a-button
+                            type="primary"
+                            icon='search'
+                            html-type="submit"
+                        >查询</a-button>
+                    </a-form-item>
+                    <a-form-item>
+                        <a-button
+                            type="primary"
+                            icon='plus-circle'
+                            @click="handleAddtoTaske"
+                        >新增</a-button>
                     </a-form-item>
                 </a-form>
                 
@@ -68,17 +92,17 @@
             cancelText="取消"
         >
             <a-form>
-                <a-form-item v-bind="formItemLayout" label="Title">
-                    <a-input v-model="editModal.title" />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="GitHub">
-                    <a-input v-model="editModal.github" />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="viewUrl">
-                    <a-input v-model="editModal.viewUrl" />
+                <a-form-item v-bind="formItemLayout" label="标题">
+                    <a-input v-model="editModal.name" placeholder='请输入项目标题' />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="Contenr">
-                    <a-input v-model="editModal.content" />
+                    <a-textarea v-model="editModal.description" placeholder="请输入项目描述" :rows="4"/>
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="GitHub">
+                    <a-input v-model="editModal.github" placeholder='请输入Github地址' />
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="viewUrl">
+                    <a-input v-model="editModal.viewUrl" placeholder='请输入预览地址' />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -93,17 +117,17 @@
             cancelText="取消"
         >
             <a-form>
-                <a-form-item v-bind="formItemLayout" label="Title">
-                    <a-input v-model="pushModal.title" placeholder='请输入项目标题' />
+                <a-form-item v-bind="formItemLayout" label="标题">
+                    <a-input v-model="pushModal.name" placeholder='请输入项目标题' />
+                </a-form-item>
+                <a-form-item v-bind="formItemLayout" label="Contenr">
+                    <a-textarea v-model="pushModal.description" placeholder="请输入项目描述" :rows="4"/>
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="GitHub">
                     <a-input v-model="pushModal.github" placeholder='请输入Github地址' />
                 </a-form-item>
                 <a-form-item v-bind="formItemLayout" label="viewUrl">
                     <a-input v-model="pushModal.viewUrl" placeholder='请输入预览地址' />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="Contenr">
-                    <a-input v-model="pushModal.content" placeholder='请输入项目描述' />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -170,20 +194,18 @@ export default {
             //编辑弹窗配置
             editModal: {
                 visible: false,
-                title: '',
-                Avatar: '',
                 id: null,
-                content: '',
+                name: '',
+                description: '',
                 viewUrl: '',
                 github: ''
             },
+
             //新增弹窗配置
             pushModal: {
                 visible: false,
-                title: '',
-                Avatar: '',
-                id: null,
-                content: '',
+                name: '',
+                description: '',
                 viewUrl: '',
                 github: ''
             },
@@ -200,25 +222,45 @@ export default {
         }
     },
     created () {
-        // this.getThingList()
-        
+        this.getTaskeListFN()
+        this.getTagsOpenListFN()
     },
     methods: {
         pickerChange(date, dateString) {
             console.log(date, dateString)
         },
-        //搜索
-        handleSearch() {
-            let rowul = this.rowul
-            let { status, user } = this.search
-            
-            const hide = this.$message.loading('查询中  ···', 0)
-            setTimeout(hide, 5000)
+        //获取项目列表
+        async getTaskeListFN() {
+            try {
+                let res = await this.Api.getTaskeListFN()
+
+                console.log(res)
+            } catch (error) {
+                
+            }
         },
-        //重置
-        handleReset() {
-            this.search.status = ''
-            this.search.user = ''
+        //获取标签列表
+        async getTagsOpenListFN() {
+            try {
+                let res = await this.Api.getTagsOpenListFN()
+
+                console.log(res)
+            } catch (error) {
+                
+            }
+        },
+        //查询
+        handleSubmit (e) {
+            e.preventDefault();
+            this.form.validateFields((err, values) => {
+                if (!err) {
+                    console.log('Received values of form: ', values);
+                }
+            })
+        },
+        //新增
+        handleAddtoTaske() {
+            this.pushModal.visible = true
         },
         //设置
         setting({ key, id }) {
@@ -270,7 +312,7 @@ export default {
     display flex
     flex-direction column
     .Back-Content{
-        margin 24px 24px 0
+        margin 16px 16px 0
         flex 1
         display flex
         flex-direction column
@@ -288,7 +330,7 @@ export default {
             .anticon {
                 font-size 16px
                 padding 0 14px
-                
+                 
             }
         }
     }
