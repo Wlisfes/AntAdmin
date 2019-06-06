@@ -99,9 +99,9 @@ export default {
                 console.log(res)
                 
                 if (res.code === 200) {
-                    this.Aux.setToken(res.data)
+                    this.Aux.setStore(res.data)
                     this.$message.success(res.message)
-                    this.$router.push({ path: `/` })
+                    this.$router.replace({ path: `/` })
                 } else {
                     this.$message.error(res.message)
                 }

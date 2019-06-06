@@ -20,7 +20,7 @@ export const isToken = () => {
 }
 
 //获取Token
-export const getToken = () => {
+export const getStore = () => {
     const token = Cookies.get(TOKEN_KEY)
     if(token) {
         return JSON.parse(aesDecrypt(token, CRYPTO_KEY))
@@ -32,13 +32,13 @@ export const getToken = () => {
 }
 
 //储存Token
-export const setToken = token => {
+export const setStore = token => {
     let v = aesEncrypt(typeof token === 'string' ? token : JSON.stringify(token), CRYPTO_KEY)
     Cookies.set(TOKEN_KEY, v, { expires: 1 })
 }
 
 //删除Token
-export const removeToken = () => {
+export const removesetStore = () => {
     Cookies.remove(TOKEN_KEY)
     return false
 }
