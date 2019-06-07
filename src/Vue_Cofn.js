@@ -6,17 +6,23 @@
  */
 
 
+import Button from'element-ui/lib/button';
+import ColorPicker from'element-ui/lib/color-picker';
+import 'element-ui/lib/theme-chalk/index.css';
+
 import Ant from 'ant-design-vue';
-import Api  from './Api'
-import * as Aux from './lib/Auxli'
-import 'ant-design-vue/dist/antd.css'
-import './assets/style/common.css'
+import Api  from './Api';
+import * as Aux from './lib/Auxli';
+import 'ant-design-vue/dist/antd.css';
+import './assets/style/common.css';
 
 export default {
     install(Vue) {
         Vue.config.productionTip = false
         Vue.prototype.Api = Api
         Vue.prototype.Aux = Aux
+        Vue.use(Button)
+        Vue.use(ColorPicker)
         Vue.use(Ant)
     }
 }
