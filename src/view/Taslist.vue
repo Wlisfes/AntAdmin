@@ -10,6 +10,7 @@
     <div id="Tas">
         <Head title="标签列表"></Head>
         <div class="Back-Content">
+            <a-divider type="vertical" />
             <a-form
                     layout="inline"
                     :form="form"
@@ -19,31 +20,30 @@
                 <a-form-item label="作者">
                     <a-select
                         placeholder='请选择'
-                        v-model="search.author"
                         style="min-width: 174px;"
+                        v-decorator="['author']"
                     >
-                        <a-select-option value="1">鱿鱼须</a-select-option>
-                        <a-select-option value="2">斯图真美</a-select-option>
+                        <a-select-option
+                            :value="au.uid"
+                            v-for="au in Author"
+                            :key="au.uid"
+                        >{{ au.nickname }}</a-select-option>
                     </a-select>
+
                 </a-form-item>
                 <a-form-item label="状态">
                     <a-select
                         placeholder='请选择'
-                        v-model="search.author"
                         style="min-width: 174px;"
+                        v-decorator="['status']"
                     >
-                        <a-select-option value="1">
-                            <a-icon type="check-circle" style="color: #04be02" />
-                            已开放
-                        </a-select-option>
-                        <a-select-option value="2">
-                            <a-icon type="exclamation-circle" style="color: #1890ff" />
-                            已关闭
-                        </a-select-option>
+                        <a-select-option value="0">已删除</a-select-option>
+                        <a-select-option value="1">已关闭</a-select-option>
+                        <a-select-option value="2">已开放</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="日期">
-                    <a-range-picker @change="pickerChange" >
+                    <a-range-picker @change="pickerChange" v-decorator="['date']">
                         <a-icon slot="suffixIcon" type="smile" />
                     </a-range-picker>
                 </a-form-item>
@@ -62,21 +62,47 @@
                     >新增</a-button>
                 </a-form-item>
             </a-form>
-            <a-table :columns="columns" :dataSource="data" bordered>
-                <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a>
-                <span slot="customTitle"><a-icon type="smile-o" /> Name</span>
-                <span slot="tags" slot-scope="tags">
-                <a-tag v-for="tag in tags" color="blue" :key="tag">{{tag}}</a-tag>
-                </span>
-                <span slot="action" slot-scope="text, record">
-                <a href="javascript:;">Invite 一 {{record.name}}</a>
-                <a-divider type="vertical" />
-                <a href="javascript:;">Delete</a>
-                <a-divider type="vertical" />
-                <a href="javascript:;" class="ant-dropdown-link">
-                    More actions <a-icon type="down" />
-                </a>
-                </span>
+            <a-table
+                :columns="TableColumns"
+                :dataSource="TableBata"
+                bordered
+                size="middle"
+                :loading="loading"
+                :locale="{
+                    emptyText: '暂无数据'
+                }"
+            >
+                
+                <template slot="name" slot-scope="text, row">
+                    <a-tag :color="row.color" v-html="row.name"></a-tag>
+                </template>
+                <template slot="createdAt" slot-scope="text">
+                    <span v-html="text"></span>
+                </template>
+                <template slot="status" slot-scope="text">
+                    <a-badge
+                        :status="text | statusType"
+                        :text="text | statusText"
+                    ></a-badge>
+                </template>
+                <template slot="operation" slot-scope="text, row">
+                    <el-button size="mini" type="primary" @click="edit(row)">编辑</el-button>
+                    <el-button
+                        @click="open(row.id)"
+                        size="mini"
+                        type="success"
+                    >发布</el-button>
+                    <el-button
+                        @click="down(row.id)"
+                        type="warning"
+                        size="mini"
+                    >关闭</el-button>
+                    <el-button
+                        @click="del(row.id)"
+                        size="mini"
+                        type="danger"
+                    >删除</el-button>
+                </template>
             </a-table>
         </div>
 
@@ -84,8 +110,15 @@
         <tas-create-form
             :visible="pushModal.visible"
             @cancel="pushModal.visible = false"
-            @create="CreateTagsCollback"
+            @create="CreateTagsFn"
         ></tas-create-form>
+
+        <!-- 编辑弹窗 start -->
+        <template>
+            <div>
+                
+            </div>
+        </template>
     </div>
 </template>
 
@@ -96,41 +129,43 @@ moment.locale('zh-cn');
 import Head from '@/components/common/Head';
 import TasCreateForm from '@/components/common/TasCreateForm';
 
-const columns = [{
-  dataIndex: 'name',
-  key: 'name',
-  slots: { title: 'customTitle' },
-  scopedSlots: { customRender: 'name' }
-}, {
-  title: 'Age456',
-  dataIndex: 'age',
-  key: 'age',
-  align: 'center'
-}, {
-  title: 'Address',
-  dataIndex: 'address',
-  key: 'address',
-}, {
-  title: 'Tags',
-  key: 'tags',
-  dataIndex: 'tags',
-  scopedSlots: { customRender: 'tags' },
-}, {
-  title: 'Action',
-  key: 'action',
-  scopedSlots: { customRender: 'action' },
-}];
-
-const data = [];
-for(let i = 0; i < 30; i++) {
-    data.push({
-        key: i,
-        name: `刀剑神域`,
-        age: i,
-        address: '刀剑神域',
-        tags: ['React', 'Vue', 'Koa']
-    })
-}
+const TableColumns = [
+    {
+        title: '标签名称',
+        dataIndex: 'name',
+        width: 90,
+        scopedSlots: { customRender: 'name' }
+    },
+    {
+        title: '标签作者',
+        dataIndex: 'author',
+        width: 90
+    },
+    {
+        title: '标签描述',
+        dataIndex: 'description'
+    },
+    {
+        title: '创建时间',
+        dataIndex: 'createdAt',
+        width: 100,
+        scopedSlots: { customRender: 'createdAt' }
+    },
+    {
+        title: '标签状态',
+        dataIndex: 'status',
+        align: 'center',
+        width: 75,
+        scopedSlots: { customRender: 'status' }
+    },
+    {
+        title: '标签操作',
+        dataIndex: 'operation',
+        align: 'center',
+        width: 280,
+        scopedSlots: { customRender: 'operation' }
+    }
+]
 
 
 export default {
@@ -138,13 +173,14 @@ export default {
         return {
             form: this.$form.createForm(this),
 
-            data,
-            columns,
+            //表格配置
+            loading: false,
+            TableBata: [],
+            TableColumns,
 
-            //搜索配置
-            search: {
-                author: '',
-            },
+            //作者列表
+            Author: [],
+            
 
             //新增弹窗配置
             pushModal: {
@@ -168,7 +204,42 @@ export default {
 
         }
     },
+    created() {
+        this.getUserListFn()
+        this.getTagsListFn()
+
+
+    },
+    filters: {
+        statusType(v) {
+            if(v == 0)
+                return 'error'
+            else if(v == 1)
+                return 'warning'
+            else if(v == 2)
+                return 'success'
+            else
+                return 'default'
+        },
+        statusText(v) {
+            if(v == 0)
+                return '已删除'
+            else if(v == 1)
+                return '已关闭'
+            else if(v == 2)
+                return '已发布'
+            else
+                return '错误'
+        },
+        createDate1(v) {
+            return v.slice(1)
+        }
+    },
     methods: {
+        
+        pickerChange(date, dateString) {
+            console.log(date, dateString)
+        },
         //查询
         handleSubmit (e) {
             e.preventDefault();
@@ -179,28 +250,142 @@ export default {
             })
         },
         //新增标签确定回调
-        CreateTagsCollback() {
-            const form = this.$refs.collectionForm.form;
-            form.validateFields((err, values) => {
-                if (err) {
-                    return;
+        async CreateTagsFn({ name, color, description }) {
+            try {
+                this.loading = true
+                this.pushModal.visible = false
+
+                let res = await this.Api.SubmitTagsFn({
+                    name, color, description
+                })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '新增成功！', duration: 1.5, description: '' })
                 }
-                console.log('Received values of form: ', values);
-                form.resetFields();
-                this.visible = false;
-            });
+                else if(res.code === 403){
+                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
+                }
+                else {
+                    this.$notification.error({ message: '新增失败！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                this.$notification.error({ message: '新增失败！', duration: 1.5, description: '' })
+            }
+
+            this.loading = false
         },
-        pickerChange(date, dateString) {
-            console.log(date, dateString)
+        //编辑
+        async edit(row) {
+            console.log(row)
         },
+        //发布
+        async open(id) {
+            try {
+                this.loading = true
+                let res = await this.Api.OpenTagsFn({ id })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '发布成功！', duration: 1.5, description: '' })
+                }
+                else if(res.code === 403){
+                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
+                }
+                else {
+                    this.$notification.error({ message: '发布失败！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                this.$notification.error({ message: '发布失败！', duration: 1.5, description: '' })
+            }
 
+            this.loading = false
+        },
+        //关闭
+        async down(id) {
+            try {
+                this.loading = true
+                let res = await this.Api.DownTagsFn({ id })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
+                }
+                else if(res.code === 403){
+                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
+                }
+                else {
+                    this.$notification.error({ message: '关闭失败！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                this.$notification.error({ message: '关闭失败！', duration: 1.5, description: '' })
+            }
 
+            this.loading = false
+        },
+        //删除
+        async del(id) {
+            try {
+                this.loading = true
+                let res = await this.Api.DelTagsFn({ id })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '删除成功！', duration: 1.5, description: '' })
+                }
+                else if(res.code === 403){
+                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
+                }
+                else {
+                    this.$notification.error({ message: '删除失败！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                this.$notification.error({ message: '删除失败！', duration: 1.5, description: '' })
+            }
 
+            this.loading = false
+        },
+        //获取所有标签
+        async getTagsListFn() {
+            try {
+                this.loading = true
+                let res = await this.Api.getTagsListFn()
+                if (res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                }
+                else {
+                    this.$notification.error({ message: '网络或其他错误，请稍后重试！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                this.$notification.error({ message: '网络或其他错误，请稍后重试！', duration: 1.5, description: '' })
+            }
 
-
-
-
-
+            this.loading = false
+        },
+        //表格数据格式化
+        TableMap(arr) {
+            if(!Array.isArray(arr)) return [];
+            let v = arr.map(v => ({
+                key: v.id,
+                id: v.id,
+                name: v.name,
+                author: v.author,
+                description: v.description,
+                status: v.status,
+                color: v.color,
+                createdAt: v.createdAt.slice(0,v.createdAt.indexOf('T')),
+                uid: v.uid
+            }))
+            return v
+        },
+        //用户列表
+        async getUserListFn() {
+            try {
+                let res = await this.Api.getUserListFn()
+                if (res.code === 200) {
+                    this.Author = res.data
+                    console.log(this.Author)
+                }
+            } catch (error) {
+                console.log(error.toString())
+            }
+        }
     },
     components: {
         Head,

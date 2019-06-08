@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-07 07:29:02
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-07 08:20:33
+ * @LastEditTime: 2019-06-08 20:16:05
  * @Description: 标签新增弹窗
  -->
 
@@ -83,14 +83,11 @@ export default {
                 if (err) {
                     return;
                 }
-                console.log('Received values of form: ', values);
+                this.$emit('create', { ...values })
                 form.resetFields();
             });
         }
-    },
-    // beforeCreate () {
-    //     this.form = this.$form.createForm(this);
-    // }
+    }
 }
 </script>
 

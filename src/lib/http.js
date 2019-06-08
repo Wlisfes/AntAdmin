@@ -8,6 +8,8 @@
 
 
 import axios from 'axios'
+import router from '../router'
+import { removesetStore } from './Auxli'
 
 
 // 创建 axios 实例
@@ -29,7 +31,17 @@ http.interceptors.request.use((config) => {
 
 //响应拦截器
 http.interceptors.response.use(
-    res => res.data,
+    res => {
+        //未登录
+        if (res.data.code === 403) {
+            removesetStore()
+            router.replace({
+                path: "/"
+            })
+        }
+
+        return res.data
+    },
     err => {
         return err
     }
