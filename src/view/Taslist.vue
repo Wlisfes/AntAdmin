@@ -10,7 +10,6 @@
     <div id="Tas">
         <Head title="标签列表"></Head>
         <div class="Back-Content">
-            <a-divider type="vertical" />
             <a-form
                     layout="inline"
                     :form="form"
@@ -120,7 +119,7 @@
         <tas-create-form
             :visible="pushModal.visible"
             @cancel="pushModal.visible = false"
-            @create="CreateTagsFn"
+            @create="(e) => { CreateTagsFn(e) }"
         ></tas-create-form>
 
         <!-- 编辑弹窗 start -->

@@ -10,128 +10,135 @@
     <div id="Thin">
         <Head title="项目列表"></Head>
         <div class="Back-Content">
-            <div style="flex: 1;position: relative;">
-                <a-form
+            <a-form
                     layout="inline"
                     :form="form"
                     @submit="handleSubmit"
                     style="margin-bottom:16px;"
                 >
-                    <a-form-item label="作者">
-                        <a-select
-                            placeholder='请选择'
-                            v-model="search.author"
-                            style="min-width: 174px;"
-                        >
-                            <a-select-option value="1">鱿鱼须</a-select-option>
-                            <a-select-option value="2">斯图真美</a-select-option>
-                        </a-select>
-                    </a-form-item>
-                    <a-form-item label="状态">
-                        <a-select
-                            placeholder='请选择'
-                            v-model="search.author"
-                            style="min-width: 174px;"
-                        >
-                            <a-select-option value="1">
-                                <a-icon type="check-circle" style="color: #04be02" />
-                                已开放
-                            </a-select-option>
-                            <a-select-option value="2">
-                                <a-icon type="exclamation-circle" style="color: #1890ff" />
-                                已关闭
-                            </a-select-option>
-                        </a-select>
-                    </a-form-item>
-                    <a-form-item label="日期">
-                        <a-range-picker @change="pickerChange" >
-                            <a-icon slot="suffixIcon" type="smile" />
-                        </a-range-picker>
-                    </a-form-item>
-                    <a-form-item>
-                        <a-button
-                            type="primary"
-                            icon='search'
-                            html-type="submit"
-                        >查询</a-button>
-                    </a-form-item>
-                    <a-form-item>
-                        <a-button
-                            type="primary"
-                            icon='plus-circle'
-                            @click="handleAddtoTaske"
-                        >新增</a-button>
-                    </a-form-item>
-                </a-form>
+                <a-form-item label="作者">
+                    <a-select
+                        placeholder='请选择'
+                        style="min-width: 174px;"
+                        v-decorator="['uid']"
+                    >
+                        <a-select-option
+                            :value="au.uid"
+                            v-for="au in Author"
+                            :key="au.uid"
+                        >{{ au.nickname }}</a-select-option>
+                    </a-select>
+
+                </a-form-item>
+                <a-form-item label="状态">
+                    <a-select
+                        placeholder='请选择'
+                        style="min-width: 174px;"
+                        v-decorator="['status']"
+                    >
+                        <a-select-option value="0">
+                            <a-badge status="error" text="已删除" />
+                        </a-select-option>
+                        <a-select-option value="1">
+                            <a-badge status="warning" text="已关闭" />
+                        </a-select-option>
+                        <a-select-option value="2">
+                            <a-badge status="success" text="已发布" />
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label="日期">
+                    <a-range-picker
+                        v-decorator="['rangePicker', {
+                            rules: [{ type: 'array' }]
+                        }]"
+                    >
+                        <a-icon slot="suffixIcon" type="smile" />
+                    </a-range-picker>
+                </a-form-item>
+                <a-form-item>
+                    <a-button
+                        type="primary"
+                        icon='search'
+                        html-type="submit"
+                    >查询</a-button>
+                </a-form-item>
+                <a-form-item>
+                    <a-button
+                        type="primary"
+                        icon='plus-circle'
+                        @click="() => { pushModal.visible = true }"
+                    >新增</a-button>
+                </a-form-item>
+                <a-form-item>
+                    <a-button
+                       
+                        icon='sync'
+                    >重置</a-button>
+                </a-form-item>
+            </a-form>
+            
+            <a-table
+                :columns="TableColumns"
+                :dataSource="TableBata"
+                bordered
+                size="middle"
+                :loading="loading"
+                :locale="{
+                    emptyText: '暂无数据'
+                }"
+                :scroll="{ x: 1500 }"
+            >
                 
-                <a-table :columns="columns" :dataSource="data" bordered>
-                    <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a>
-                    <span slot="customTitle"><a-icon type="smile-o" /> Name</span>
-                    <span slot="tags" slot-scope="tags">
-                    <a-tag v-for="tag in tags" color="blue" :key="tag">{{tag}}</a-tag>
-                    </span>
-                    <span slot="action" slot-scope="text, record">
-                    <a href="javascript:;">Invite 一 {{record.name}}</a>
-                    <a-divider type="vertical" />
-                    <a href="javascript:;">Delete</a>
-                    <a-divider type="vertical" />
-                    <a href="javascript:;" class="ant-dropdown-link">
-                        More actions <a-icon type="down" />
-                    </a>
-                    </span>
-                </a-table>
-            </div>
+                <template slot="name" slot-scope="text, row">
+                    <a-tag :color="row.color" v-html="row.name"></a-tag>
+                </template>
+                <template slot="tags" slot-scope="text">
+                    <a-tag :color="ke.color" v-for="(ke) in text" :key="ke.id">{{ ke.name }}</a-tag>
+                </template>
+                <template slot="github" slot-scope="text">
+                    <a-tag color="blue" style="margin: 0 auto;">
+                        <a :href="text" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    </a-tag>
+                </template>
+                <template slot="createdAt" slot-scope="text">
+                    <span v-html="text"></span>
+                </template>
+                <template slot="status" slot-scope="text">
+                    <a-badge
+                        :status="text | statusType"
+                        :text="text | statusText"
+                    ></a-badge>
+                </template>
+                <template slot="operation" slot-scope="text, row">
+                    <el-button size="mini" type="primary" @click="startEdit(row)">编辑</el-button>
+                    <el-button
+                        @click="open(row.id)"
+                        size="mini"
+                        type="success"
+                    >发布</el-button>
+                    <el-button
+                        @click="down(row.id)"
+                        type="warning"
+                        size="mini"
+                    >关闭</el-button>
+                    <el-button
+                        @click="del(row.id)"
+                        size="mini"
+                        type="danger"
+                    >删除</el-button>
+                </template>
+            </a-table>
         </div>
 
-        <!-- 编辑弹窗 start -->
-        <a-modal
-            title="项目编辑"
-            v-model="editModal.visible"
-            @ok="handleOk"
-            okText="确定"
-            cancelText="取消"
-        >
-            <a-form>
-                <a-form-item v-bind="formItemLayout" label="标题">
-                    <a-input v-model="editModal.name" placeholder='请输入项目标题' />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="Contenr">
-                    <a-textarea v-model="editModal.description" placeholder="请输入项目描述" :rows="4"/>
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="GitHub">
-                    <a-input v-model="editModal.github" placeholder='请输入Github地址' />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="viewUrl">
-                    <a-input v-model="editModal.viewUrl" placeholder='请输入预览地址' />
-                </a-form-item>
-            </a-form>
-        </a-modal>
-        <!-- 编辑弹窗 end -->
+        <!-- 新增项目弹窗 -->
+        <taske-create-form
+            :visible="pushModal.visible"
+            @cancel="() => { pushModal.visible = false }"
+            @create="(e) => { createTaske(e) }"
+        ></taske-create-form>
 
-        <!-- 新增弹窗 start -->
-        <a-modal
-            title="新增项目"
-            v-model="pushModal.visible"
-            @ok="handleOk"
-            okText="确定"
-            cancelText="取消"
-        >
-            <a-form>
-                <a-form-item v-bind="formItemLayout" label="标题">
-                    <a-input v-model="pushModal.name" placeholder='请输入项目标题' />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="Contenr">
-                    <a-textarea v-model="pushModal.description" placeholder="请输入项目描述" :rows="4"/>
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="GitHub">
-                    <a-input v-model="pushModal.github" placeholder='请输入Github地址' />
-                </a-form-item>
-                <a-form-item v-bind="formItemLayout" label="viewUrl">
-                    <a-input v-model="pushModal.viewUrl" placeholder='请输入预览地址' />
-                </a-form-item>
-            </a-form>
-        </a-modal>
-        <!-- 新增弹窗 end -->
+
     </div>
 </template>
 
@@ -139,76 +146,82 @@
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import Head from '../components/common/Head';
+import Head from '@/components/common/Head';
+import TaskeCreateForm from '@/components/common/TaskeCreateForm'
 
-const columns = [{
-  dataIndex: 'name',
-  key: 'name',
-  slots: { title: 'customTitle' },
-  scopedSlots: { customRender: 'name' }
-}, {
-  title: 'Age456',
-  dataIndex: 'age',
-  key: 'age',
-  align: 'center'
-}, {
-  title: 'Address',
-  dataIndex: 'address',
-  key: 'address',
-}, {
-  title: 'Tags',
-  key: 'tags',
-  dataIndex: 'tags',
-  scopedSlots: { customRender: 'tags' },
-}, {
-  title: 'Action',
-  key: 'action',
-  scopedSlots: { customRender: 'action' },
-}];
+const TableColumns = [
+    {
+        title: '项目名称',
+        dataIndex: 'name',
+        width: 120,
+        fixed: 'left',
+        scopedSlots: { customRender: 'name' }
+    },
+    {
+        title: '项目作者',
+        dataIndex: 'author',
+        width: 90
+    },
+    {
+        title: '项目描述',
+        dataIndex: 'description'
+    },
+    {
+        title: '类别标签',
+        dataIndex: 'tags',
+        // width: 80,
+        scopedSlots: { customRender: 'tags' }
+    },
+    {
+        title: '源码地址',
+        dataIndex: 'github',
+        width: 80,
+        align: 'center',
+        scopedSlots: { customRender: 'github' }
+    },
+    {
+        title: '创建时间',
+        dataIndex: 'createdAt',
+        width: 100,
+        align: 'center',
+        scopedSlots: { customRender: 'createdAt' }
+    },
+    {
+        title: '项目状态',
+        dataIndex: 'status',
+        align: 'center',
+        width: 75,
+        scopedSlots: { customRender: 'status' }
+    },
+    {
+        title: '项目操作',
+        dataIndex: 'operation',
+        align: 'center',
+        width: 280,
+        fixed: 'right',
+        scopedSlots: { customRender: 'operation' }
+    }
+]
 
-const data = [];
-for(let i = 0; i < 30; i++) {
-    data.push({
-        key: i,
-        name: `刀剑神域`,
-        age: i,
-        address: '刀剑神域',
-        tags: ['React', 'Vue', 'Koa']
-    })
-}
 
 export default {
     data () {
         return {
             form: this.$form.createForm(this),
 
-            rowul: [],
-            //搜索配置
-            search: {
-                author: '',
-            },
+            //作者列表
+            Author: [],
 
-            data,
-            columns,
-            
-            //编辑弹窗配置
-            editModal: {
-                visible: false,
-                id: null,
-                name: '',
-                description: '',
-                viewUrl: '',
-                github: ''
-            },
+            //表格配置
+            loading: false,
+            TableBata: [],
+            TableColumns,
 
             //新增弹窗配置
             pushModal: {
                 visible: false,
-                name: '',
-                description: '',
-                viewUrl: '',
-                github: ''
             },
+        
             formItemLayout: {
                 labelCol: {
                     xs: { span: 24 },
@@ -222,85 +235,118 @@ export default {
         }
     },
     created () {
+        this.getUserListFn()
         this.getTaskeListFN()
-        this.getTagsOpenListFN()
+    },
+    filters: {
+        statusType(v) {
+            if(v == 0)
+                return 'error'
+            else if(v == 1)
+                return 'warning'
+            else if(v == 2)
+                return 'success'
+            else
+                return 'default'
+        },
+        statusText(v) {
+            if(v == 0)
+                return '已删除'
+            else if(v == 1)
+                return '已关闭'
+            else if(v == 2)
+                return '已发布'
+            else
+                return '错误'
+        }
     },
     methods: {
-        pickerChange(date, dateString) {
-            console.log(date, dateString)
+       //查询数据过滤
+        handleSubmit (e) {
+            e.preventDefault();
+            this.form.validateFields((err, fieldsValue) => {
+                if(err) return
+                console.log(fieldsValue)
+                let data = ((props) => {
+                    let v = {}
+                    for(let k in props) {
+                        if(props[k]) {
+                            if(k == 'rangePicker') {
+                                const t = fieldsValue['rangePicker']
+                                v.first = t[0].format('YYYY-MM-DD'),
+                                v.last = t[1].format('YYYY-MM-DD')
+                            }
+                            else {
+                                v[k] = props[k]
+                            }
+                        }
+                    }
+                    return v
+                })(fieldsValue)
+                // this.FindWhereTagsFn(data)
+            })
         },
-        //获取项目列表
+        //新增项目
+        async createTaske({ name,tags,github,viewUrl,weights,description }) {
+            try {
+                let res = await this.Api.SubmitTaskeFN({
+                    name,tags,github,viewUrl,weights,description
+                })
+
+                console.log(res)
+            } catch (error) {
+                console.error(error)
+            }
+        },
+
+        //获取所有项目列表
         async getTaskeListFN() {
             try {
                 let res = await this.Api.getTaskeListFN()
 
-                console.log(res)
-            } catch (error) {
-                
-            }
-        },
-        //获取标签列表
-        async getTagsOpenListFN() {
-            try {
-                let res = await this.Api.getTagsOpenListFN()
-
-                console.log(res)
-            } catch (error) {
-                
-            }
-        },
-        //查询
-        handleSubmit (e) {
-            e.preventDefault();
-            this.form.validateFields((err, values) => {
-                if (!err) {
-                    console.log('Received values of form: ', values);
+                if(res.code === 200) {
+                    console.log(res)
+                    this.TableBata = this.TableMap(res.data)
                 }
-            })
-        },
-        //新增
-        handleAddtoTaske() {
-            this.pushModal.visible = true
-        },
-        //设置
-        setting({ key, id }) {
-            let rowul = this.rowul
-            if(key == 1 || key == 2) {
-                this.rowul = rowul.map(item => {
-                    if(item.id === id) {
-                        key == 1 ? item.status = true : item.status = false
-                    }
-                    return item
-                })
+            } catch (error) {
+                console.error(error)
             }
-            
         },
-        //编辑
-        edit({ Avatar,content,github,id,title,viewUrl }) {
-            this.editModal.Avatar = Avatar
-            this.editModal.content = content
-            this.editModal.github = github
-            this.editModal.id = id
-            this.editModal.title = title
-            this.editModal.visible = true
+        //用户列表
+        async getUserListFn() {
+            try {
+                let res = await this.Api.getUserListFn()
+                if (res.code === 200) {
+                    this.Author = res.data
+                }
+            } catch (error) {
+                console.error(error)
+            }
         },
-        //编辑确定
-        handleOk() {
-            let rowul = this.rowul
-            let editModal = this.editModal
-            
-            this.rowul = rowul.map(item => {
-                return item.id === editModal.id ? editModal : item
-            })
-            this.editModal.visible = false
-        },
-        //新增
-        handleNew() {
-            this.pushModal.visible = true
+        //表格数据格式化
+        TableMap(arr) {
+            if(!Array.isArray(arr)) return [];
+            let v = arr.map(v => ({
+                key: v.id,
+                id: v.id,
+                name: v.name,
+                author: v.author,
+                avatar: v.avatar,
+                description: v.description,
+                status: v.status,
+                createdAt: v.createdAt.slice(0,v.createdAt.indexOf('T')),
+                uid: v.uid,
+                weights: v.weights,
+                tags: v.tags,
+                viewUrl: v.viewUrl,
+                github: v.github
+            }))
+            return v
         }
     },
     components: {
-        Head
+        Head,
+        TaskeCreateForm
     }
 }
 </script>
