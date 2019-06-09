@@ -8,7 +8,7 @@
 
 import Button from'element-ui/lib/button';
 import ColorPicker from'element-ui/lib/color-picker';
-import Message from 'element-ui/lib/message'
+import InputNumber from 'element-ui/lib/input-number'
 import 'element-ui/lib/theme-chalk/index.css';
 
 import Ant from 'ant-design-vue';
@@ -24,9 +24,8 @@ export default {
         Vue.prototype.Aux = Aux
         Vue.use(Button)
         Vue.use(ColorPicker)
+        Vue.use(InputNumber)
         Vue.use(Ant)
 
-
-        Vue.prototype.Elmessage = Message;
     }
 }

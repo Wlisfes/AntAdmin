@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-07 00:15:17
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-09 00:24:29
+ * @LastEditTime: 2019-06-09 14:04:56
  * @Description: 标签操作接口
  */
 
@@ -45,3 +45,14 @@ export const DelTagsFn = props => {
     return http.get(props, `/del/tags`)
 }
 
+
+//条件查找
+export const FindWhereTagsFn = props => {
+    return http.post(props, `/find/tags`)
+}
+
+
+//修改标签
+export const UpdateTags = props => {
+    return http.post(props, `/update/tags`)
+}

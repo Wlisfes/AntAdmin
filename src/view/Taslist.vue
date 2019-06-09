@@ -21,7 +21,7 @@
                     <a-select
                         placeholder='请选择'
                         style="min-width: 174px;"
-                        v-decorator="['author']"
+                        v-decorator="['uid']"
                     >
                         <a-select-option
                             :value="au.uid"
@@ -39,11 +39,15 @@
                     >
                         <a-select-option value="0">已删除</a-select-option>
                         <a-select-option value="1">已关闭</a-select-option>
-                        <a-select-option value="2">已开放</a-select-option>
+                        <a-select-option value="2">已发布</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="日期">
-                    <a-range-picker @change="pickerChange" v-decorator="['date']">
+                    <a-range-picker
+                        v-decorator="['rangePicker', {
+                            rules: [{ type: 'array' }]
+                        }]"
+                    >
                         <a-icon slot="suffixIcon" type="smile" />
                     </a-range-picker>
                 </a-form-item>
@@ -60,6 +64,12 @@
                         icon='plus-circle'
                         @click="pushModal.visible = true"
                     >新增</a-button>
+                </a-form-item>
+                <a-form-item>
+                    <a-button
+                        @click="Reset"
+                        icon='sync'
+                    >重置</a-button>
                 </a-form-item>
             </a-form>
             <a-table
@@ -86,7 +96,7 @@
                     ></a-badge>
                 </template>
                 <template slot="operation" slot-scope="text, row">
-                    <el-button size="mini" type="primary" @click="edit(row)">编辑</el-button>
+                    <el-button size="mini" type="primary" @click="startEdit(row)">编辑</el-button>
                     <el-button
                         @click="open(row.id)"
                         size="mini"
@@ -114,11 +124,16 @@
         ></tas-create-form>
 
         <!-- 编辑弹窗 start -->
-        <template>
-            <div>
-                
-            </div>
-        </template>
+        <tas-edit-form
+            :visible="editModal.visible"
+            :id="editModal.id"
+            :name="editModal.name"
+            :color="editModal.color"
+            :weights="editModal.weights"
+            :description="editModal.description"
+            @cancel="editModal.visible = false"
+            @create="editEnd"
+        ></tas-edit-form>
     </div>
 </template>
 
@@ -128,12 +143,13 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 import Head from '@/components/common/Head';
 import TasCreateForm from '@/components/common/TasCreateForm';
+import TasEditForm from '@/components/common/TasEditForm';
 
 const TableColumns = [
     {
         title: '标签名称',
         dataIndex: 'name',
-        width: 90,
+        width: 120,
         scopedSlots: { customRender: 'name' }
     },
     {
@@ -185,8 +201,14 @@ export default {
             //新增弹窗配置
             pushModal: {
                 visible: false,
+            },
+            //编辑弹窗配置
+            editModal: {
+                visible: false,
+                id: '',
                 name: '',
-                color: null,
+                color: '',
+                weights: 1,
                 description: ''
             },
             
@@ -236,27 +258,63 @@ export default {
         }
     },
     methods: {
-        
-        pickerChange(date, dateString) {
-            console.log(date, dateString)
+        //重置
+        Reset() {
+            this.form.resetFields()
+            this.getTagsListFn()
         },
-        //查询
+        //查询数据过滤
         handleSubmit (e) {
             e.preventDefault();
-            this.form.validateFields((err, values) => {
-                if (!err) {
-                    console.log('Received values of form: ', values);
-                }
+            this.form.validateFields((err, fieldsValue) => {
+                if(err) return
+                let data = ((props) => {
+                    let v = {}
+                    for(let k in props) {
+                        if(props[k]) {
+                            if(k == 'rangePicker') {
+                                const t = fieldsValue['rangePicker']
+                                v.first = t[0].format('YYYY-MM-DD'),
+                                v.last = t[1].format('YYYY-MM-DD')
+                            }
+                            else {
+                                v[k] = props[k]
+                            }
+                        }
+                    }
+                    return v
+                })(fieldsValue)
+                this.FindWhereTagsFn(data)
             })
         },
+        //查询
+        async FindWhereTagsFn(rul) {
+            try {
+                this.loading = true
+                let res = await this.Api.FindWhereTagsFn({ ...rul })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                }
+                else if(res.code === 403){
+                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
+                }
+                else {
+                    this.$notification.error({ message: '查询失败！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                this.$notification.error({ message: '查询失败！', duration: 1.5, description: '' })
+            }
+
+            this.loading = false
+        },
         //新增标签确定回调
-        async CreateTagsFn({ name, color, description }) {
+        async CreateTagsFn({ name, color, description, weights }) {
             try {
                 this.loading = true
                 this.pushModal.visible = false
 
                 let res = await this.Api.SubmitTagsFn({
-                    name, color, description
+                    name, color, description, weights
                 })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
@@ -275,8 +333,31 @@ export default {
             this.loading = false
         },
         //编辑
-        async edit(row) {
-            console.log(row)
+        async startEdit(row) {
+            this.editModal.id = row.id
+            this.editModal.name = row.name
+            this.editModal.color = row.color
+            this.editModal.weights = row.weights
+            this.editModal.description = row.description
+            this.editModal.visible = true
+        },
+        //编辑保存
+        async editEnd({ id, name, color, description, weights }) {
+            try {
+                this.loading = true
+                this.editModal.visible = false
+                let res = await this.Api.UpdateTags({
+                    id, name, color, description, weights
+                })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '修改成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                
+            }
+
+            this.loading = false
         },
         //发布
         async open(id) {
@@ -287,14 +368,8 @@ export default {
                     this.TableBata = this.TableMap(res.data)
                     this.$notification.success({ message: '发布成功！', duration: 1.5, description: '' })
                 }
-                else if(res.code === 403){
-                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
-                }
-                else {
-                    this.$notification.error({ message: '发布失败！', duration: 1.5, description: '' })
-                }
             } catch (error) {
-                this.$notification.error({ message: '发布失败！', duration: 1.5, description: '' })
+                
             }
 
             this.loading = false
@@ -308,14 +383,9 @@ export default {
                     this.TableBata = this.TableMap(res.data)
                     this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
                 }
-                else if(res.code === 403){
-                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
-                }
-                else {
-                    this.$notification.error({ message: '关闭失败！', duration: 1.5, description: '' })
-                }
+                
             } catch (error) {
-                this.$notification.error({ message: '关闭失败！', duration: 1.5, description: '' })
+                
             }
 
             this.loading = false
@@ -329,14 +399,9 @@ export default {
                     this.TableBata = this.TableMap(res.data)
                     this.$notification.success({ message: '删除成功！', duration: 1.5, description: '' })
                 }
-                else if(res.code === 403){
-                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
-                }
-                else {
-                    this.$notification.error({ message: '删除失败！', duration: 1.5, description: '' })
-                }
+                
             } catch (error) {
-                this.$notification.error({ message: '删除失败！', duration: 1.5, description: '' })
+                
             }
 
             this.loading = false
@@ -349,11 +414,8 @@ export default {
                 if (res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
                 }
-                else {
-                    this.$notification.error({ message: '网络或其他错误，请稍后重试！', duration: 1.5, description: '' })
-                }
             } catch (error) {
-                this.$notification.error({ message: '网络或其他错误，请稍后重试！', duration: 1.5, description: '' })
+                console.log(error)
             }
 
             this.loading = false
@@ -370,7 +432,8 @@ export default {
                 status: v.status,
                 color: v.color,
                 createdAt: v.createdAt.slice(0,v.createdAt.indexOf('T')),
-                uid: v.uid
+                uid: v.uid,
+                weights: v.weights
             }))
             return v
         },
@@ -380,7 +443,6 @@ export default {
                 let res = await this.Api.getUserListFn()
                 if (res.code === 200) {
                     this.Author = res.data
-                    console.log(this.Author)
                 }
             } catch (error) {
                 console.log(error.toString())
@@ -389,7 +451,8 @@ export default {
     },
     components: {
         Head,
-        TasCreateForm
+        TasCreateForm,
+        TasEditForm
     }
 }
 </script>

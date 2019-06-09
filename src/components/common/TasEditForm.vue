@@ -1,9 +1,9 @@
 <!--
  * @Author: 情雨随风
- * @Date: 2019-06-07 07:29:02
+ * @Date: 2019-06-09 13:34:25
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-09 10:27:11
- * @Description: 标签新增弹窗
+ * @LastEditTime: 2019-06-09 13:57:10
+ * @Description: 标签编辑弹窗
  -->
 
 
@@ -22,7 +22,8 @@
             <a-input
                 placeholder="请输入标签名称"
                 v-decorator="['name',{
-                        rules: [{ required: true, message: '请输入标签名称!' }],
+                    initialValue: name,
+                    rules: [{ required: true, message: '请输入标签名称!' }],
                 }]"
             />
             </a-form-item>
@@ -31,6 +32,7 @@
                     style="width: 100%;"
                     :predefine="predefineColors"
                     v-decorator="['color',{
+                        initialValue: color,
                         rules: [{ required: true, message: '请选择颜色!' }],
                     }]"
                 ></el-color-picker>
@@ -43,7 +45,7 @@
                     size="small"
                     :precision="0"
                     v-decorator="['weights',{
-                        initialValue: 1
+                        initialValue: weights
                     }]"
                 ></el-input-number>
             </a-form-item>
@@ -52,6 +54,7 @@
                     placeholder="请输入标签描述"
                     :rows="8"
                     v-decorator="['description',{
+                        initialValue: description,
                         rules: [{ required: true, message: '请输入标签描述!' }],
                     }]"
                 ></a-textarea>
@@ -66,6 +69,26 @@ export default {
         visible: {
             type: Boolean,
             default: () => false
+        },
+        id: {
+            type: String,
+            default: () => ''
+        },
+        name: {
+            type: String,
+            default: () => ''
+        },
+        color: {
+            type: String,
+            default: () => ''
+        },
+        weights: {
+            type: Number,
+            default: () => 1
+        },
+        description: {
+            type: String,
+            default: () => ''
         }
     },
     data() {
@@ -99,7 +122,7 @@ export default {
                 if (err) {
                     return;
                 }
-                this.$emit('create', { ...values })
+                this.$emit('create', { ...values, id: this.id })
                 form.resetFields();
             });
         },
@@ -122,4 +145,3 @@ export default {
 <style lang="stylus" scoped>
 
 </style>
-
