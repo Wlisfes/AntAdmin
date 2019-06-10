@@ -10,73 +10,12 @@
     <div id="Thin">
         <Head title="项目列表"></Head>
         <div class="Back-Content">
-            <a-form
-                    layout="inline"
-                    :form="form"
-                    @submit="handleSubmit"
-                    style="margin-bottom:16px;"
-                >
-                <a-form-item label="作者">
-                    <a-select
-                        placeholder='请选择'
-                        style="min-width: 174px;"
-                        v-decorator="['uid']"
-                    >
-                        <a-select-option
-                            :value="au.uid"
-                            v-for="au in Author"
-                            :key="au.uid"
-                        >{{ au.nickname }}</a-select-option>
-                    </a-select>
-
-                </a-form-item>
-                <a-form-item label="状态">
-                    <a-select
-                        placeholder='请选择'
-                        style="min-width: 174px;"
-                        v-decorator="['status']"
-                    >
-                        <a-select-option value="0">
-                            <a-badge status="error" text="已删除" />
-                        </a-select-option>
-                        <a-select-option value="1">
-                            <a-badge status="warning" text="已关闭" />
-                        </a-select-option>
-                        <a-select-option value="2">
-                            <a-badge status="success" text="已发布" />
-                        </a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-form-item label="日期">
-                    <a-range-picker
-                        v-decorator="['rangePicker', {
-                            rules: [{ type: 'array' }]
-                        }]"
-                    >
-                        <a-icon slot="suffixIcon" type="smile" />
-                    </a-range-picker>
-                </a-form-item>
-                <a-form-item>
-                    <a-button
-                        type="primary"
-                        icon='search'
-                        html-type="submit"
-                    >查询</a-button>
-                </a-form-item>
-                <a-form-item>
-                    <a-button
-                        type="primary"
-                        icon='plus-circle'
-                        @click="() => { pushModal.visible = true }"
-                    >新增</a-button>
-                </a-form-item>
-                <a-form-item>
-                    <a-button
-                       
-                        icon='sync'
-                    >重置</a-button>
-                </a-form-item>
-            </a-form>
+            <find
+                @find="findCollBack"
+                @plus="pluscollBack"
+                @reply="replycollBack"
+            ></find>
+        
             
             <a-table
                 :columns="TableColumns"
@@ -137,8 +76,6 @@
             @cancel="() => { pushModal.visible = false }"
             @create="(e) => { createTaske(e) }"
         ></taske-create-form>
-
-
     </div>
 </template>
 
@@ -148,6 +85,7 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 import Head from '@/components/common/Head';
 import TaskeCreateForm from '@/components/common/TaskeCreateForm'
+import Find from '@/components/common/Find'
 
 const TableColumns = [
     {
@@ -261,31 +199,20 @@ export default {
         }
     },
     methods: {
-       //查询数据过滤
-        handleSubmit (e) {
-            e.preventDefault();
-            this.form.validateFields((err, fieldsValue) => {
-                if(err) return
-                console.log(fieldsValue)
-                let data = ((props) => {
-                    let v = {}
-                    for(let k in props) {
-                        if(props[k]) {
-                            if(k == 'rangePicker') {
-                                const t = fieldsValue['rangePicker']
-                                v.first = t[0].format('YYYY-MM-DD'),
-                                v.last = t[1].format('YYYY-MM-DD')
-                            }
-                            else {
-                                v[k] = props[k]
-                            }
-                        }
-                    }
-                    return v
-                })(fieldsValue)
-                // this.FindWhereTagsFn(data)
-            })
+        //查询回调
+        findCollBack(e) {
+            console.log(e)
         },
+        //新增回调
+        pluscollBack() {
+            console.log(1)
+        },
+        //重置回调
+        replycollBack() {
+            console.log(2)
+        },
+
+
         //新增项目
         async createTaske({ name,tags,github,viewUrl,weights,description }) {
             try {
@@ -302,15 +229,16 @@ export default {
         //获取所有项目列表
         async getTaskeListFN() {
             try {
+                this.loading = true
                 let res = await this.Api.getTaskeListFN()
-
                 if(res.code === 200) {
-                    console.log(res)
                     this.TableBata = this.TableMap(res.data)
                 }
             } catch (error) {
                 console.error(error)
             }
+
+            this.loading = false
         },
         //用户列表
         async getUserListFn() {
@@ -346,6 +274,7 @@ export default {
     },
     components: {
         Head,
+        Find,
         TaskeCreateForm
     }
 }

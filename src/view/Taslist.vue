@@ -80,6 +80,7 @@
                 :locale="{
                     emptyText: '暂无数据'
                 }"
+                :scroll="{ x: 1500 }"
             >
                 
                 <template slot="name" slot-scope="text, row">
@@ -149,6 +150,7 @@ const TableColumns = [
         title: '标签名称',
         dataIndex: 'name',
         width: 120,
+        fixed: 'left',
         scopedSlots: { customRender: 'name' }
     },
     {
@@ -178,6 +180,7 @@ const TableColumns = [
         dataIndex: 'operation',
         align: 'center',
         width: 280,
+        fixed: 'right',
         scopedSlots: { customRender: 'operation' }
     }
 ]
