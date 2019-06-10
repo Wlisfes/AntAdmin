@@ -2,7 +2,7 @@
  * @Date: 2019-06-10 16:34:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-10 17:44:47
+ * @LastEditTime: 2019-06-10 23:09:58
  * @Description: 表格头部查找组件
  -->
 
@@ -20,11 +20,14 @@
                 style="min-width: 174px;"
                 v-decorator="['uid']"
             >
-                <a-select-option value="1">1</a-select-option>
-                <a-select-option value="2">2</a-select-option>
-                <a-select-option value="3">3</a-select-option>
+                <a-select-option
+                    v-for="at in Author"
+                    :key="at.uid"
+                    :value="at.uid"
+                >
+                    {{ at.nickname }}
+                </a-select-option>
             </a-select>
-
         </a-form-item>
         <a-form-item label="状态">
             <a-select
@@ -83,8 +86,14 @@ moment.locale('zh-cn');
 export default {
     data () {
         return {
-            form: this.$form.createForm(this)
+            form: this.$form.createForm(this),
+
+            //作者列表
+            Author: []
         }
+    },
+    created() {
+        this.getUserListFn()
     },
     methods: {
         //查询
@@ -119,6 +128,17 @@ export default {
         reply() {
             this.$emit('reply')
             this.form.resetFields()
+        },
+        //用户列表
+        async getUserListFn() {
+            try {
+                let res = await this.Api.getUserListFn()
+                if (res.code === 200) {
+                    this.Author = res.data
+                }
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 }

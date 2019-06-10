@@ -10,67 +10,12 @@
     <div id="Tas">
         <Head title="标签列表"></Head>
         <div class="Back-Content">
-            <a-form
-                    layout="inline"
-                    :form="form"
-                    @submit="handleSubmit"
-                    style="margin-bottom:16px;"
-                >
-                <a-form-item label="作者">
-                    <a-select
-                        placeholder='请选择'
-                        style="min-width: 174px;"
-                        v-decorator="['uid']"
-                    >
-                        <a-select-option
-                            :value="au.uid"
-                            v-for="au in Author"
-                            :key="au.uid"
-                        >{{ au.nickname }}</a-select-option>
-                    </a-select>
+            <find
+                @find="findCollBack"
+                @plus="pluscollBack"
+                @reply="replycollBack"
+            ></find>
 
-                </a-form-item>
-                <a-form-item label="状态">
-                    <a-select
-                        placeholder='请选择'
-                        style="min-width: 174px;"
-                        v-decorator="['status']"
-                    >
-                        <a-select-option value="0">已删除</a-select-option>
-                        <a-select-option value="1">已关闭</a-select-option>
-                        <a-select-option value="2">已发布</a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-form-item label="日期">
-                    <a-range-picker
-                        v-decorator="['rangePicker', {
-                            rules: [{ type: 'array' }]
-                        }]"
-                    >
-                        <a-icon slot="suffixIcon" type="smile" />
-                    </a-range-picker>
-                </a-form-item>
-                <a-form-item>
-                    <a-button
-                        type="primary"
-                        icon='search'
-                        html-type="submit"
-                    >查询</a-button>
-                </a-form-item>
-                <a-form-item>
-                    <a-button
-                        type="primary"
-                        icon='plus-circle'
-                        @click="pushModal.visible = true"
-                    >新增</a-button>
-                </a-form-item>
-                <a-form-item>
-                    <a-button
-                        @click="Reset"
-                        icon='sync'
-                    >重置</a-button>
-                </a-form-item>
-            </a-form>
             <a-table
                 :columns="TableColumns"
                 :dataSource="TableBata"
@@ -119,7 +64,7 @@
         <!-- 新增弹窗 start -->
         <tas-create-form
             :visible="pushModal.visible"
-            @cancel="pushModal.visible = false"
+            @cancel="() => { pushModal.visible = false }"
             @create="(e) => { CreateTagsFn(e) }"
         ></tas-create-form>
 
@@ -144,6 +89,7 @@ moment.locale('zh-cn');
 import Head from '@/components/common/Head';
 import TasCreateForm from '@/components/common/TasCreateForm';
 import TasEditForm from '@/components/common/TasEditForm';
+import Find from '@/components/common/Find';
 
 const TableColumns = [
     {
@@ -196,10 +142,6 @@ export default {
             TableBata: [],
             TableColumns,
 
-            //作者列表
-            Author: [],
-            
-
             //新增弹窗配置
             pushModal: {
                 visible: false,
@@ -229,10 +171,7 @@ export default {
         }
     },
     created() {
-        this.getUserListFn()
         this.getTagsListFn()
-
-
     },
     filters: {
         statusType(v) {
@@ -260,53 +199,29 @@ export default {
         }
     },
     methods: {
-        //重置
-        Reset() {
-            this.form.resetFields()
+        //查询回调
+        findCollBack(e) {
+            this.FindWhereTagsFn(e)
+        },
+        //新增回调
+        pluscollBack() {
+            this.pushModal.visible = true
+        },
+        //重置回调
+        replycollBack() {
             this.getTagsListFn()
         },
-        //查询数据过滤
-        handleSubmit (e) {
-            e.preventDefault();
-            this.form.validateFields((err, fieldsValue) => {
-                if(err) return
-                let data = ((props) => {
-                    let v = {}
-                    for(let k in props) {
-                        if(props[k]) {
-                            if(k == 'rangePicker') {
-                                const t = fieldsValue['rangePicker']
-                                v.first = t[0].format('YYYY-MM-DD'),
-                                v.last = t[1].format('YYYY-MM-DD')
-                            }
-                            else {
-                                v[k] = props[k]
-                            }
-                        }
-                    }
-                    return v
-                })(fieldsValue)
-                this.FindWhereTagsFn(data)
-            })
-        },
         //查询
-        async FindWhereTagsFn(rul) {
+        async FindWhereTagsFn(findData) {
             try {
                 this.loading = true
-                let res = await this.Api.FindWhereTagsFn({ ...rul })
+                let res = await this.Api.FindWhereTagsFn({ ...findData })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
                 }
-                else if(res.code === 403){
-                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
-                }
-                else {
-                    this.$notification.error({ message: '查询失败！', duration: 1.5, description: '' })
-                }
             } catch (error) {
-                this.$notification.error({ message: '查询失败！', duration: 1.5, description: '' })
+                console.error(error)
             }
-
             this.loading = false
         },
         //新增标签确定回调
@@ -314,7 +229,6 @@ export default {
             try {
                 this.loading = true
                 this.pushModal.visible = false
-
                 let res = await this.Api.SubmitTagsFn({
                     name, color, description, weights
                 })
@@ -322,16 +236,9 @@ export default {
                     this.TableBata = this.TableMap(res.data)
                     this.$notification.success({ message: '新增成功！', duration: 1.5, description: '' })
                 }
-                else if(res.code === 403){
-                    this.$notification.info({ message: '未登录！', duration: 1.5, description: '' })
-                }
-                else {
-                    this.$notification.error({ message: '新增失败！', duration: 1.5, description: '' })
-                }
             } catch (error) {
-                this.$notification.error({ message: '新增失败！', duration: 1.5, description: '' })
+                console.error(error)
             }
-
             this.loading = false
         },
         //编辑
@@ -356,9 +263,8 @@ export default {
                     this.$notification.success({ message: '修改成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
-                
+                console.error(error)
             }
-
             this.loading = false
         },
         //发布
@@ -371,9 +277,8 @@ export default {
                     this.$notification.success({ message: '发布成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
-                
+                console.error(error)
             }
-
             this.loading = false
         },
         //关闭
@@ -385,11 +290,9 @@ export default {
                     this.TableBata = this.TableMap(res.data)
                     this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
                 }
-                
             } catch (error) {
-                
+                console.error(error)
             }
-
             this.loading = false
         },
         //删除
@@ -401,11 +304,9 @@ export default {
                     this.TableBata = this.TableMap(res.data)
                     this.$notification.success({ message: '删除成功！', duration: 1.5, description: '' })
                 }
-                
             } catch (error) {
-                
+                console.error(error)
             }
-
             this.loading = false
         },
         //获取所有标签
@@ -419,7 +320,6 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-
             this.loading = false
         },
         //表格数据格式化
@@ -438,21 +338,11 @@ export default {
                 weights: v.weights
             }))
             return v
-        },
-        //用户列表
-        async getUserListFn() {
-            try {
-                let res = await this.Api.getUserListFn()
-                if (res.code === 200) {
-                    this.Author = res.data
-                }
-            } catch (error) {
-                console.log(error.toString())
-            }
         }
     },
     components: {
         Head,
+        Find,
         TasCreateForm,
         TasEditForm
     }

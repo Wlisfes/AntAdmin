@@ -19,7 +19,7 @@
     >
         <div class="logo">
             <router-link to="/">
-                <img src="https://avatars3.githubusercontent.com/u/32263302?s=460&v=4" />
+                <img src="http://localhost:9800/assets/1557678889694.jpg" />
             </router-link>
         </div>
         <a-menu theme="light" 

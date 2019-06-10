@@ -15,8 +15,7 @@
                 @plus="pluscollBack"
                 @reply="replycollBack"
             ></find>
-        
-            
+    
             <a-table
                 :columns="TableColumns"
                 :dataSource="TableBata"
@@ -30,7 +29,7 @@
             >
                 
                 <template slot="name" slot-scope="text, row">
-                    <a-tag :color="row.color" v-html="row.name"></a-tag>
+                    <b v-html="row.name"></b>
                 </template>
                 <template slot="tags" slot-scope="text">
                     <a-tag :color="ke.color" v-for="(ke) in text" :key="ke.id">{{ ke.name }}</a-tag>
@@ -147,9 +146,6 @@ export default {
         return {
             form: this.$form.createForm(this),
 
-            //作者列表
-            Author: [],
-
             //表格配置
             loading: false,
             TableBata: [],
@@ -173,8 +169,7 @@ export default {
         }
     },
     created () {
-        this.getUserListFn()
-        this.getTaskeListFN()
+        this.__getTaskeListFn()
     },
     filters: {
         statusType(v) {
@@ -201,55 +196,101 @@ export default {
     methods: {
         //查询回调
         findCollBack(e) {
-            console.log(e)
+            this.FindWhereTaskeFn(e)
         },
         //新增回调
         pluscollBack() {
-            console.log(1)
+            this.pushModal.visible = true
         },
         //重置回调
         replycollBack() {
-            console.log(2)
+            this.__getTaskeListFn()
         },
-
-
-        //新增项目
-        async createTaske({ name,tags,github,viewUrl,weights,description }) {
-            try {
-                let res = await this.Api.SubmitTaskeFN({
-                    name,tags,github,viewUrl,weights,description
-                })
-
-                console.log(res)
-            } catch (error) {
-                console.error(error)
-            }
-        },
-
-        //获取所有项目列表
-        async getTaskeListFN() {
+        //查询
+        async FindWhereTaskeFn(findData) {
             try {
                 this.loading = true
-                let res = await this.Api.getTaskeListFN()
+                let res = await this.Api.FindWhereTaskeFn({ ...findData })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
                 }
             } catch (error) {
                 console.error(error)
             }
-
             this.loading = false
         },
-        //用户列表
-        async getUserListFn() {
+        //新增项目
+        async createTaske({ name,tags,github,viewUrl,weights,description }) {
             try {
-                let res = await this.Api.getUserListFn()
-                if (res.code === 200) {
-                    this.Author = res.data
+                this.loading = true
+                this.pushModal.visible = false
+                let res = await this.Api.SubmitTaskeFn({
+                    name,tags,github,viewUrl,weights,description
+                })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '新增成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
                 console.error(error)
             }
+            this.loading = false
+        },
+        //发布
+        async open(id) {
+            try {
+                this.loading = true
+                let res = await this.Api.OpenTaskeFn({ id })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '发布成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
+        },
+        //关闭
+        async down(id) {
+            try {
+                this.loading = true
+                let res = await this.Api.DownTaskeFn({ id })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
+        },
+        //删除
+        async del(id) {
+            try {
+                this.loading = true
+                let res = await this.Api.DelTaskeFn({ id })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
+        },
+
+        //获取所有项目列表
+        async __getTaskeListFn() {
+            try {
+                this.loading = true
+                let res = await this.Api.getTaskeListFn()
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
         },
         //表格数据格式化
         TableMap(arr) {

@@ -92,25 +92,16 @@ export default {
         async login({ phone,password }) {
             try {
                 this.logging = true
-                var res = await this.Api.loginFN({
-                    phone,password
-                })
-
-                console.log(res)
-                
+                var res = await this.Api.loginFN({ phone,password })
                 if (res.code === 200) {
                     this.Aux.setStore(res.data)
-                    this.$message.success(res.message)
+                    this.$notification.success({ message: '登录成功！', description: '', duration: 1.5 })
                     this.$router.replace({ path: `/` })
-                } else {
-                    this.$message.error(res.message)
                 }
-                this.logging = false
             } catch (error) {
-                console.log(error)
-                this.logging = false
-                this.$message.error('登录失败！')
+                console.error(error)
             }
+            this.logging = false
         }
     }
 }
