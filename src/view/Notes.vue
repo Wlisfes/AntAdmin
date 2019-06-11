@@ -22,14 +22,21 @@
             </a-form>
             
             
-            <MarkDown>
-            </MarkDown>
+            <MarkDown
+                ref="markdown"
+                :theme="markdown.theme"
+                :autoSave="markdown.autoSave"
+                :initialValue="markdown.initialValue"
+                @on-save="save"
+            ></MarkDown>
+
+            <div class="post-content Light" v-html="markdown.Const"></div>
         </div>
     </div>
 </template>
 
 <script>
-import Head from '../components/common/Head'
+import Head from '../components/common/Head'     //OneDark
 import MarkDown  from 'vue-meditor'
 export default {
     data () {
@@ -40,14 +47,19 @@ export default {
                 theme: "OneDark",
                 mode: 1,
                 autoSave: false,
-                initialValue: ``
+                initialValue: ``,
+                Const: ''
             }
         }
     },
     methods: {
         save(e) {
             console.log(e)
-        }  
+            this.markdown.Const = e.html
+
+            this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
+        },
+
     },
     components: {
         Head,
