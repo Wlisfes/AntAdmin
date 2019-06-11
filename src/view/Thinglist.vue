@@ -243,9 +243,22 @@ export default {
             this.editModal.description = row.description
             this.editModal.visible = true
         },
-        //编辑保持
-        async editEnd(e) {
-            console.log(e)
+        //编辑保存
+        async editEnd({ id,name,description,github,viewUrl,weights,tags }) {
+            try {
+                this.loading = true
+                this.editModal.visible = false
+                let res = await this.Api.UpdateTaske({
+                    id,name,description,github,viewUrl,weights,tags
+                })
+                if(res.code === 200) {
+                    this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '修改成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
         },
         //发布
         async open(id) {

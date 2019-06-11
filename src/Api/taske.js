@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-06 23:40:27
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-10 23:40:34
+ * @LastEditTime: 2019-06-11 22:08:39
  * @Description: 项目操作接口
  */
 
@@ -43,5 +43,11 @@ export const DelTaskeFn = props => {
 //条件查找
 export const FindWhereTaskeFn = props => {
     return http.post(props, `/find/taske`)
+}
+
+
+//修改项目
+export const UpdateTaske = props => {
+    return http.post(props, `/update/taske`)
 }
 

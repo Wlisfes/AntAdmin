@@ -2,7 +2,7 @@
  * @Date: 2019-06-11 10:12:30
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-11 16:06:04
+ * @LastEditTime: 2019-06-11 21:34:47
  * @Description: 项目编辑弹窗
  -->
 
@@ -164,7 +164,7 @@ export default {
                     color: h.color,
                     name: h.name
                 }))
-                this.$emit('create', { ...values })
+                this.$emit('create', { ...values, id: this.id })
                 this.form.resetFields();
             });
         },
