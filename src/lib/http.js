@@ -14,7 +14,7 @@ import { Response,ResCatch } from './ponse'
 // 创建 axios 实例
 const http = axios.create({
     baseURL: '/api',    //代理地址
-    timeout: 2500       //请求超时时间
+    timeout: 6000       //请求超时时间
 })
 
 //请求拦截器
@@ -40,8 +40,6 @@ class Axios {
         return http.get(url, {
             params: { ...props }
         })
-
-        
     }
 
     post(props, url) {
