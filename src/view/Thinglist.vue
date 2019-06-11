@@ -75,16 +75,29 @@
             @cancel="() => { pushModal.visible = false }"
             @create="(e) => { createTaske(e) }"
         ></taske-create-form>
+
+        <!-- 编辑项目弹窗 -->
+        <taske-edit-form
+            :visible="editModal.visible"
+            :id="editModal.id"
+            :name="editModal.name"
+            :tags="editModal.tags"
+            :github="editModal.github"
+            :viewUrl="editModal.viewUrl"
+            :weights="editModal.weights"
+            :description="editModal.description"
+            @cancel="() => { editModal.visible = false }"
+            @create="(e) => { editEnd(e) }"
+        ></taske-edit-form>
     </div>
 </template>
 
 <script>
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn');
 import Head from '@/components/common/Head';
-import TaskeCreateForm from '@/components/common/TaskeCreateForm'
-import Find from '@/components/common/Find'
+import TaskeCreateForm from '@/components/common/TaskeCreateForm';
+import Find from '@/components/common/Find';
+import TaskeEditForm from '@/components/common/TaskeEditForm';
+import { statusType,statusText } from '@/lib/filters';
 
 const TableColumns = [
     {
@@ -106,7 +119,7 @@ const TableColumns = [
     {
         title: '类别标签',
         dataIndex: 'tags',
-        // width: 80,
+        width: 300,
         scopedSlots: { customRender: 'tags' }
     },
     {
@@ -155,16 +168,17 @@ export default {
             pushModal: {
                 visible: false,
             },
-        
-            formItemLayout: {
-                labelCol: {
-                    xs: { span: 24 },
-                    sm: { span: 3 }
-                },
-                wrapperCol: {
-                    xs: { span: 24 },
-                    sm: { span: 21 }
-                },
+
+            //编辑弹窗配置
+            editModal: {
+                visible: false,
+                id: '',
+                name: '',
+                tags: [],
+                github: '',
+                viewUrl: '',
+                weights: 1,
+                description: ''
             }
         }
     },
@@ -172,26 +186,8 @@ export default {
         this.__getTaskeListFn()
     },
     filters: {
-        statusType(v) {
-            if(v == 0)
-                return 'error'
-            else if(v == 1)
-                return 'warning'
-            else if(v == 2)
-                return 'success'
-            else
-                return 'default'
-        },
-        statusText(v) {
-            if(v == 0)
-                return '已删除'
-            else if(v == 1)
-                return '已关闭'
-            else if(v == 2)
-                return '已发布'
-            else
-                return '错误'
-        }
+        statusType: (v) => statusType(v),
+        statusText: (v) => statusText(v)
     },
     methods: {
         //查询回调
@@ -235,6 +231,21 @@ export default {
                 console.error(error)
             }
             this.loading = false
+        },
+        //编辑
+        startEdit(row) {
+            this.editModal.id = row.id
+            this.editModal.name = row.name
+            this.editModal.tags = row.tags.map(el => el.tagsfirst_id)
+            this.editModal.github = row.github
+            this.editModal.viewUrl = row.viewUrl
+            this.editModal.weights = row.weights
+            this.editModal.description = row.description
+            this.editModal.visible = true
+        },
+        //编辑保持
+        async editEnd(e) {
+            console.log(e)
         },
         //发布
         async open(id) {
@@ -316,6 +327,7 @@ export default {
     components: {
         Head,
         Find,
+        TaskeEditForm,
         TaskeCreateForm
     }
 }

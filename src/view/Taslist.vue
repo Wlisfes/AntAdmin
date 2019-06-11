@@ -83,13 +83,11 @@
 </template>
 
 <script>
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn');
 import Head from '@/components/common/Head';
 import TasCreateForm from '@/components/common/TasCreateForm';
 import TasEditForm from '@/components/common/TasEditForm';
 import Find from '@/components/common/Find';
+import { statusType,statusText } from '@/lib/filters';
 
 const TableColumns = [
     {
@@ -154,18 +152,6 @@ export default {
                 color: '',
                 weights: 1,
                 description: ''
-            },
-            
-
-            formItemLayout: {
-                labelCol: {
-                    xs: { span: 24 },
-                    sm: { span: 3 }
-                },
-                wrapperCol: {
-                    xs: { span: 24 },
-                    sm: { span: 21 }
-                },
             }
 
         }
@@ -174,29 +160,8 @@ export default {
         this.getTagsListFn()
     },
     filters: {
-        statusType(v) {
-            if(v == 0)
-                return 'error'
-            else if(v == 1)
-                return 'warning'
-            else if(v == 2)
-                return 'success'
-            else
-                return 'default'
-        },
-        statusText(v) {
-            if(v == 0)
-                return '已删除'
-            else if(v == 1)
-                return '已关闭'
-            else if(v == 2)
-                return '已发布'
-            else
-                return '错误'
-        },
-        createDate1(v) {
-            return v.slice(1)
-        }
+        statusType: (v) => statusType(v),
+        statusText: (v) => statusText(v)
     },
     methods: {
         //查询回调
@@ -242,7 +207,7 @@ export default {
             this.loading = false
         },
         //编辑
-        async startEdit(row) {
+        startEdit(row) {
             this.editModal.id = row.id
             this.editModal.name = row.name
             this.editModal.color = row.color

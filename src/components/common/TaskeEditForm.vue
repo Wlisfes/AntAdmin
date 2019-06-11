@@ -1,9 +1,9 @@
 <!--
+ * @Date: 2019-06-11 10:12:30
  * @Author: 情雨随风
- * @Date: 2019-06-09 21:02:08
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-11 16:05:41
- * @Description: 项目新增弹窗
+ * @LastEditTime: 2019-06-11 16:06:04
+ * @Description: 项目编辑弹窗
  -->
 
 
@@ -11,7 +11,7 @@
 <template>
     <a-modal
         :visible="visible"
-        title='新增项目'
+        title='编辑项目'
         cancelText="取消"
         okText='保存'
         :width='750'
@@ -23,6 +23,7 @@
                 <a-input
                     placeholder="请输入项目名称"
                     v-decorator="['name',{
+                        initialValue: name,
                         rules: [{ required: true, message: '请输入标签名称!' }],
                     }]"
                 />
@@ -33,6 +34,7 @@
                     mode="multiple"
                     placeholder="请选择类别标签"
                     v-decorator="['tags',{
+                        initialValue: tags,
                         rules: [{ required: true, message: '请选择类别标签!' }],
                     }]"
                 >
@@ -47,6 +49,7 @@
                 <a-input
                     placeholder="请输入github地址"
                     v-decorator="['github',{
+                        initialValue: github,
                         rules: [{ required: true, message: '请输入github地址!' }],
                     }]"
                 />
@@ -55,6 +58,7 @@
                 <a-input
                     placeholder="请输入项目线上预览地址"
                     v-decorator="['viewUrl',{
+                        initialValue: viewUrl,
                         rules: [{ required: true, message: '请输入项目线上预览地址!' }],
                     }]"
                 />
@@ -67,7 +71,7 @@
                     size="small"
                     :precision="0"
                     v-decorator="['weights',{
-                        initialValue: 1
+                        initialValue: weights
                     }]"
                 ></el-input-number>
             </a-form-item>
@@ -76,6 +80,7 @@
                     placeholder="请输入标签描述"
                     :rows="8"
                     v-decorator="['description',{
+                        initialValue: description,
                         rules: [{ required: true, message: '请输入标签描述!' }],
                     }]"
                 ></a-textarea>
@@ -90,6 +95,34 @@ export default {
         visible: {
             type: Boolean,
             default: () => false
+        },
+        id: {
+            type: String,
+            default: () => ''
+        },
+        name: {
+            type: String,
+            default: () => ''
+        },
+        tags: {
+            type: Array,
+            default: () => []
+        },
+        github: {
+            type: String,
+            default: () => 'https://github.com/Wlisfes'
+        },
+        viewUrl: {
+            type: String,
+            default: () => 'https://github.com/Wlisfes'
+        },
+        weights: {
+            type: Number,
+            default: () => 1
+        },
+        description: {
+            type: String,
+            default: () => ''
         }
     },
     data() {
