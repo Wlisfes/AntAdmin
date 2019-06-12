@@ -183,6 +183,7 @@ export default {
                 let res = await this.Api.FindWhereTagsFn({ ...findData })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '查找成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
                 console.error(error)

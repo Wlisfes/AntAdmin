@@ -157,8 +157,6 @@ const TableColumns = [
 export default {
     data () {
         return {
-            form: this.$form.createForm(this),
-
             //表格配置
             loading: false,
             TableBata: [],
@@ -209,6 +207,7 @@ export default {
                 let res = await this.Api.FindWhereTaskeFn({ ...findData })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
+                    this.$notification.success({ message: '查找成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
                 console.error(error)
@@ -295,7 +294,7 @@ export default {
                 let res = await this.Api.DelTaskeFn({ id })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)
-                    this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
+                    this.$notification.success({ message: '删除成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
                 console.error(error)

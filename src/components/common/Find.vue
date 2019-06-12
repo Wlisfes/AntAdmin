@@ -2,7 +2,7 @@
  * @Date: 2019-06-10 16:34:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-10 23:09:58
+ * @LastEditTime: 2019-06-12 23:36:24
  * @Description: 表格头部查找组件
  -->
 
@@ -12,7 +12,7 @@
         layout="inline"
         :form="form"
         @submit="(e) => { find(e) }"
-        style="margin-bottom:16px;"
+        class="find"
     >
         <a-form-item label="作者">
             <a-select
@@ -62,7 +62,7 @@
                 html-type="submit"
             >查询</a-button>
         </a-form-item>
-        <a-form-item>
+        <a-form-item v-show="plusvisible">
             <a-button
                 @click="() => { plus() }"
                 type="primary"
@@ -84,6 +84,12 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 export default {
+    props: {
+        plusvisible: {
+            type: Boolean,
+            default: () => true
+        }
+    },
     data () {
         return {
             form: this.$form.createForm(this),
@@ -145,15 +151,5 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.row {
-    display  flex
-    flex-wrap wrap
 
-
-
-
-
-
-    
-}
 </style>

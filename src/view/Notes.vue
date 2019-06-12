@@ -9,83 +9,98 @@
 <template>
     <div class="root">
         <Head title="新增笔记"></Head>
-        <div class="Back-Content">
-            <a-form :form="form" class="ant-advanced-search-form">
-                <a-row :gutter="24">
-                    <a-col :span="12">
-                        <a-form-item label="笔记标题">
-                            <a-input
-                                v-decorator="[
-                                    'name',
-                                    { rules: [{required: true, message: 'Input something!' }] }
-                                ]"
-                                placeholder="请输入笔记标题！"
-                            />
-                        </a-form-item>
-                    </a-col>
-
-
-                </a-row>
-            </a-form>
-                
-
-
-
-
-
-
-            <MarkDown
+        <div class="Back-Content" ref="Content">
+            <mark-down
                 ref="markdown"
-                :theme="markdown.theme"
+                theme="OneDark"
                 :autoSave="markdown.autoSave"
                 :initialValue="markdown.initialValue"
                 @on-save="save"
-            ></MarkDown>
-
-            <div class="post-content Light" v-html="markdown.Const"></div>
+            ></mark-down>
         </div>
+        <notes-create-form
+            :visible="pushModal.visible"
+            @cancel="() => { pushModal.visible = false }"
+            @create="createBook"
+        ></notes-create-form>
     </div>
 </template>
 
 <script>
-import Head from '../components/common/Head'     //OneDark
+import Head from '@/components/common/Head'     //OneDark
+import NotesCreateForm from '@/components/common/NotesCreateForm'
 import MarkDown  from 'vue-meditor'
 export default {
     data () {
         return {
-            form: this.$form.createForm(this),
             //编辑器配置
             markdown: {
-                theme: "OneDark",
                 mode: 1,
                 autoSave: false,
                 initialValue: ``,
-                Const: ''
+                Text: '',
+                Textvalue: '',
+                theme: 'OneDark'
             },
-            formItemLayout: {
-                labelCol: {
-                    xs: { span: 12 },
-                    sm: { span: 2 }
-                },
-                wrapperCol: {
-                    xs: { span: 12 },
-                    sm: { span: 10 }
-                },
-            },
+            
+            //新增弹窗配置
+            pushModal: {
+                visible: false
+            }
+            
         }
+    },
+    created() {
+        this.getTagsOpenListFn()
     },
     methods: {
         save(e) {
-            console.log(e)
-            this.markdown.Const = e.html
-
+            this.markdown.Text = e.html
+            this.markdown.theme = e.theme
+            this.markdown.Textvalue = e.value
+            this.pushModal.visible = true
             // this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
         },
+        //新增笔记
+        async createBook({ name,description,tags,weights }) {
+            try {
+                this.pushModal.visible = false
+                this.$message.loading('数据发送中......', 0)
+                let res = await this.Api.SubmitBookFn({
+                    name,
+                    theme: this.markdown.theme,
+                    Text: this.markdown.Text,
+                    Textvalue: this.markdown.Textvalue,
+                    tags,
+                    weights,
+                    description
+                })
+                this.$message.destroy()
+                if(res.code === 200) {
+                    console.log(res)
+                    this.$notification.success({ message: '新增成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        //标签列表
+        async getTagsOpenListFn() {
+            try {
+                let res = await this.Api.getTagsOpenListFn()
 
+                if(res.code === 200) {
+                    this.tagse = res.data
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
     },
     components: {
         Head,
-        MarkDown
+        MarkDown,
+        NotesCreateForm
     }
 }
 </script>
@@ -103,22 +118,7 @@ export default {
         flex-direction column
         background #ffffff
         padding 24px 24px
-
-        .ant-advanced-search-form {
-            padding: 24px;
-            background: #fbfbfb;
-            border: 1px solid #d9d9d9;
-            border-radius: 6px;
-
-            .ant-form-item {
-                display: flex;
-            }
-
-            .ant-form-item-control-wrapper {
-                flex: 1;
-            }
-        }
-
+        position relative
     }
 }
 </style>

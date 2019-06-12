@@ -1,3 +1,20 @@
 .ant-advanced-search-form .ant-form-item-control-wrapper{
     flex: 1;
 }
+
+
+.find {
+    margin-bottom: 16px;
+}
+/* .find .ant-form-item-label {
+    vertical-align: middle;
+    line-height: 39.9999px;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: 41.05px;
+    padding: 0;
+}
+.find .ant-form-item-label, .ant-form-item-control-wrapper {
+    width: auto;
+} */
