@@ -10,18 +10,30 @@
     <div class="root">
         <Head title="新增笔记"></Head>
         <div class="Back-Content">
-            <a-form layout="inline" style="margin-bottom: 24px;">
-                <a-form-item label="标题">
-                    <a-input
-                        v-decorator="[
-                        'note',
-                            {rules: [{ required: true, message: 'Please input your note!' }]}
-                        ]"
-                    />
-                </a-form-item>
+            <a-form :form="form" class="ant-advanced-search-form">
+                <a-row :gutter="24">
+                    <a-col :span="12">
+                        <a-form-item label="笔记标题">
+                            <a-input
+                                v-decorator="[
+                                    'name',
+                                    { rules: [{required: true, message: 'Input something!' }] }
+                                ]"
+                                placeholder="请输入笔记标题！"
+                            />
+                        </a-form-item>
+                    </a-col>
+
+
+                </a-row>
             </a-form>
-            
-            
+                
+
+
+
+
+
+
             <MarkDown
                 ref="markdown"
                 :theme="markdown.theme"
@@ -49,7 +61,17 @@ export default {
                 autoSave: false,
                 initialValue: ``,
                 Const: ''
-            }
+            },
+            formItemLayout: {
+                labelCol: {
+                    xs: { span: 12 },
+                    sm: { span: 2 }
+                },
+                wrapperCol: {
+                    xs: { span: 12 },
+                    sm: { span: 10 }
+                },
+            },
         }
     },
     methods: {
@@ -57,7 +79,7 @@ export default {
             console.log(e)
             this.markdown.Const = e.html
 
-            this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
+            // this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
         },
 
     },
@@ -82,7 +104,21 @@ export default {
         background #ffffff
         padding 24px 24px
 
-        
+        .ant-advanced-search-form {
+            padding: 24px;
+            background: #fbfbfb;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+
+            .ant-form-item {
+                display: flex;
+            }
+
+            .ant-form-item-control-wrapper {
+                flex: 1;
+            }
+        }
+
     }
 }
 </style>
