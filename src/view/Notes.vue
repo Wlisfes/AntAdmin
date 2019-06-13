@@ -12,11 +12,20 @@
         <div class="Back-Content" ref="Content">
             <mark-down
                 ref="markdown"
+                :style="get__Styke"
                 theme="OneDark"
                 :autoSave="markdown.autoSave"
                 :initialValue="markdown.initialValue"
                 @on-save="save"
             ></mark-down>
+            <div class="save">
+                <a-button icon="sync" style="margin-right: 16px;">清空</a-button>
+                <a-button
+                    @click="handleSave"
+                    type="primary"
+                    icon="save"
+                >保存</a-button>
+            </div>
         </div>
         <notes-create-form
             :visible="pushModal.visible"
@@ -40,7 +49,8 @@ export default {
                 initialValue: ``,
                 Text: '',
                 Textvalue: '',
-                theme: 'OneDark'
+                theme: 'OneDark',
+                height: 600
             },
             
             //新增弹窗配置
@@ -53,13 +63,28 @@ export default {
     created() {
         this.getTagsOpenListFn()
     },
+    mounted () {
+        this.$nextTick(() => {
+            this.markdown.height = this.$refs.Content.clientHeight
+        })
+    },
+    computed: {
+        get__Styke() {
+            return this.markdown.height > 600 ? { minHeight: '100%' } : { minHeight: '600px' }
+        }
+    },
     methods: {
+        //监听保存事件
         save(e) {
             this.markdown.Text = e.html
             this.markdown.theme = e.theme
             this.markdown.Textvalue = e.value
             this.pushModal.visible = true
             // this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
+        },
+        //手动触发保存
+        handleSave() {
+            this.$refs.markdown.handleSave()
         },
         //新增笔记
         async createBook({ name,description,tags,weights }) {
@@ -117,8 +142,13 @@ export default {
         display flex
         flex-direction column
         background #ffffff
-        padding 24px 24px
+        padding 16px
         position relative
+        .save {
+            position absolute
+            right 16px
+            bottom 16px
+        }
     }
 }
 </style>
