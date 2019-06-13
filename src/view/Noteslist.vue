@@ -199,7 +199,6 @@ export default {
         },
         //编辑
         startEdit(row) {
-            console.log(row)
             this.editModal.id = row.id
             this.editModal.name = row.name
             this.editModal.tags = row.tags.map(el => el.tagsfirst_id)

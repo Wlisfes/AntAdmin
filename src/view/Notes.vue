@@ -19,7 +19,11 @@
                 @on-save="save"
             ></mark-down>
             <div class="save">
-                <a-button icon="sync" style="margin-right: 16px;">清空</a-button>
+                <a-button
+                    @click="Empty"
+                    icon="sync"
+                    style="margin-right: 16px;"
+                >清空</a-button>
                 <a-button
                     @click="handleSave"
                     type="primary"
@@ -82,6 +86,10 @@ export default {
             this.pushModal.visible = true
             // this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
         },
+        //清空
+        Empty() {
+            this.$refs.markdown.value = ''
+        },
         //手动触发保存
         handleSave() {
             this.$refs.markdown.handleSave()
@@ -89,6 +97,7 @@ export default {
         //新增笔记
         async createBook({ name,description,tags,weights }) {
             try {
+                this.Empty()
                 this.pushModal.visible = false
                 this.$message.loading('数据发送中......', 0)
                 let res = await this.Api.SubmitBookFn({
@@ -102,7 +111,6 @@ export default {
                 })
                 this.$message.destroy()
                 if(res.code === 200) {
-                    console.log(res)
                     this.$notification.success({ message: '新增成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
