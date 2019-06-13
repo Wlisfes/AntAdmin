@@ -41,23 +41,15 @@
                     <a-textarea v-decorator="formRules.descr" :autosize="{ minRows: 4, maxRows: 4 }" />
                 </a-form-item>
                 <a-form-item label="头像" v-bind="itemClo">
-                    <a-upload
-                        v-decorator="['upload']"
-                        action="http://localhost:9999/upload"
-                        listType="picture-card"
-                        :fileList="fileList"
-                        @preview="handlePreview"
-                        @change="handleChange"
-                    >
-                        <div v-if="fileList.length < 1">
-                            <a-icon type="plus" />
-                            <div class="ant-upload-text">Upload</div>
-                        </div>
-                    </a-upload>
+                    <div class="Update" @click="imagecropperShow = true">
+                        <img :src="pictureUrl" v-if="pictureUrl" alt="" />
+                        <a-icon
+                            v-else
+                            style="font-size: 32px;color: #999;"
+                            type="plus"
+                        />
+                    </div>
                 </a-form-item>
-
-
-
 
                 <a-form-item :wrapper-col="{ span: 12, offset: 4 }">
                     <a-button type="primary" html-type="submit">注册</a-button>
@@ -65,11 +57,23 @@
                 </a-form-item>
             </a-form>
         </div>
+
+        <cropper
+            v-show="imagecropperShow"
+            :key="imagecropperKey"
+            :width="300"
+            :height="300"
+            lang-type="zh"
+            @close="close"
+            @crop-upload-success="cropSuccess"
+        ></cropper>
     </div>
 </template>
 
 <script>
 import Head from '../components/common/Head'
+import upload from '@/Api/upload'
+import cropper from '../components/Upload/index'
 export default {
     data () {
         return {
@@ -121,9 +125,10 @@ export default {
                     }
                 ]
             },
-            previewVisible: false,
-            previewImage: '',
-            fileList: []
+
+            pictureUrl: '',
+            imagecropperShow: false,
+            imagecropperKey: 0,
         }
     },
     methods: {
@@ -155,19 +160,28 @@ export default {
                 
             }
         },
-        handleCancel () {
-            this.previewVisible = false
+        async cropSuccess(resData) {
+            this.imagecropperShow = false
+            this.imagecropperKey = this.imagecropperKey + 1
+
+            try {
+                let res = await upload(resData, '/upload')
+                console.log(res)
+
+                if(res.code === 200) {
+                    this.pictureUrl = `http://localhost:9800${res.data.pictureUrl}`
+                }
+            } catch (error) {
+                
+            }
         },
-        handlePreview (file) {
-            this.previewImage = file.url || file.thumbUrl
-            this.previewVisible = true
-        },
-        handleChange ({ fileList }) {
-            this.fileList = fileList
+        close() {
+            this.imagecropperShow = false
         }
     },
     components: {
-        Head
+        Head,
+        cropper
     }
 }
 </script>
@@ -194,6 +208,27 @@ export default {
         .ant-upload-select-picture-card .ant-upload-text {
             margin-top: 8px;
             color: #666;
+        }
+
+        .Update {
+            width: 104px;
+            height: 104px;
+            border: 1px dashed #d9d9d9;
+            border-radius 4px
+            cursor pointer
+            transition: border-color 0.3s ease;
+            display flex
+            flex-direction column
+            justify-content center
+            align-items center
+            overflow hidden
+            &:hover {
+                border-color: #1890ff;
+            }
+            img {
+                width 100%;
+                display block
+            }
         }
     }
 }

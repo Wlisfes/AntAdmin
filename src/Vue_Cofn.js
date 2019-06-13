@@ -8,7 +8,8 @@
 
 import Button from'element-ui/lib/button';
 import ColorPicker from'element-ui/lib/color-picker';
-import InputNumber from 'element-ui/lib/input-number'
+import InputNumber from 'element-ui/lib/input-number';
+import Upload from 'element-ui/lib/upload'
 import 'element-ui/lib/theme-chalk/index.css';
 
 
@@ -27,6 +28,7 @@ export default {
         Vue.use(Button)
         Vue.use(ColorPicker)
         Vue.use(InputNumber)
+        Vue.use(Upload)
         Vue.use(Ant)
       
     }

@@ -47,6 +47,17 @@ class Axios {
             ...props
         })
     }
+
+    upload(props, url) {
+        return http({
+            method: 'POST',
+            url,
+            data: props,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+    }
 }
 
 export default new Axios();

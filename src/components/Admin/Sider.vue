@@ -19,7 +19,7 @@
     >
         <div class="logo">
             <router-link to="/">
-                <img src="http://localhost:9800/assets/1557678889694.jpg" />
+                <img src="http://localhost:9800/assets/album/515b52bc8f191.png" />
             </router-link>
         </div>
         <a-menu theme="light" 
