@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-12 23:45:01
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-13 20:23:06
+ * @LastEditTime: 2019-06-14 21:53:06
  * @Description: 笔记编辑弹窗
  -->
 
@@ -69,7 +69,7 @@
             </a-form-item>
         </a-form>
 
-        <mark-down
+        <!-- <mark-down
             :height="400"
             style="min-height: 400px"
             ref="markdown"
@@ -77,12 +77,19 @@
             :autoSave="markdown.autoSave"
             :initialValue="Textvalue"
             @on-save="save"
-        ></mark-down>
+        ></mark-down> -->
+        <meditor
+            ref="meditor"
+            :showSave="false"
+            :Textvalue="Textvalue"
+            :height="400"
+            @save="save"
+        ></meditor>
     </a-modal>
 </template>
 
 <script>
-import MarkDown from 'vue-meditor'  //handleSave
+import meditor from '@/components/Upload/meditor'
 export default {
     props: {
         visible: {
@@ -172,7 +179,7 @@ export default {
                 }))
     
                 this.model = values
-                this.$refs.markdown.handleSave()
+                this.$refs.meditor.handleSave()
                 this.form.resetFields();
             });
         },
@@ -183,7 +190,7 @@ export default {
                 id: this.id,
                 Text: e.html,
                 theme: e.theme,
-                value: e.value,
+                Textvalue: e.value,
                 ...model
             })
         },
@@ -213,7 +220,7 @@ export default {
         }
     },
     components: {
-        MarkDown
+        meditor
     }
 }
 </script>

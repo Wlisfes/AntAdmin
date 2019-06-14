@@ -210,12 +210,12 @@ export default {
             this.editModal.visible = true
         },
         //编辑保存
-        async editEnd({ id,name,tags,Text,theme,weights,description }) {
+        async editEnd({ id,name,tags,Text,Textvalue,theme,weights,description }) {
             try {
                 this.loading = true
                 this.editModal.visible = false
                 let res = await this.Api.UpdateBook({
-                    id,name,tags,Text,theme,weights,description
+                    id,name,tags,Text,Textvalue,theme,weights,description
                 })
                 if(res.code === 200) {
                     this.TableBata = this.TableMap(res.data)

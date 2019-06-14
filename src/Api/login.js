@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-05 23:03:23
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-09 01:02:38
+ * @LastEditTime: 2019-06-14 23:23:22
  * @Description: 登录机制接口
  */
 
@@ -19,6 +19,12 @@ export const loginFN = props => {
 //登出
 export const logOutFN = props => {
     return http.get(props, `/logOut/user`)
+}
+
+
+//注册
+export const postUser = props => {
+    return http.post(props, `/post/user`)
 }
 
 

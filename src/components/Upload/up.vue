@@ -2,7 +2,7 @@
  * @Date: 2019-06-14 13:54:12
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-14 17:24:41
+ * @LastEditTime: 2019-06-14 21:31:52
  * @Description: 富文本扩展插件
  -->
 
@@ -41,7 +41,7 @@ export default {
                 let fmData = new FormData()
                     fmData.append('field', file);
                     this.cropSuccess(fmData)
-
+                    input.value=''
             }, false)
         },
         //创建dom

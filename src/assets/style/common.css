@@ -6,6 +6,10 @@
 .find {
     margin-bottom: 16px;
 }
+
+.markdown-preview img {
+    width: 100% !important;
+}
 /* .find .ant-form-item-label {
     vertical-align: middle;
     line-height: 39.9999px;

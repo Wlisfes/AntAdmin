@@ -10,56 +10,54 @@
     <div id="Tas">
         <Head title="用户列表"></Head>
         <div class="Back-Content">
-            <a-form layout="inline" style="margin-bottom: 24px;">
-                <a-form-item label="注册时间">
-                    <a-range-picker
-                        :ranges="{ Today: [moment(), moment()], 'This Month': [moment(), moment().endOf('month')] }"
-                        :format="dateFormat"
-                    />
-                </a-form-item>
-                <a-form-item label="状态">
-                    <a-select placeholder='请选择' v-model="search.status"  style="min-width: 174px;">
-                        <a-select-option value="1">
-                                <a-icon type="check-circle" style="color: #04be02" />
-                                已开放
-                            </a-select-option>
-                            <a-select-option value="2">
-                                <a-icon type="exclamation-circle" style="color: #1890ff" />
-                                已关闭
-                        </a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-button type="primary" style="margin: 3.5px 6px 0" html-type="submit" icon='scan' @click="handleSearch">
-                    查询
-                </a-button>
-                <a-button icon='sync' style="margin: 3.5px 6px 0" @click="handleReset">
-                    重置
-                </a-button>
-            </a-form>
-
             <div class="back-Table">
-                <a-table 
-                    :columns="columns" 
-                    :dataSource="Table" 
-                    bordered 
+                <a-table
+                    :columns="TableColumns"
+                    :dataSource="TableData"
+                    bordered
                     size="middle"
+                    :loading="loading"
                     :locale="{
                         emptyText: '暂无数据'
                     }"
-                >
-                    <span slot="name" slot-scope="name">
-                        <b :key="name">{{ name }}</b>
-                    </span>
-                    <span slot="status" slot-scope="status">
-                        <a-tag :color="status == 1 ? '#04be02' : '#1890ff'" :key="status">
-                            {{ status | tags }}
-                        </a-tag>
-                    </span>
-                    <template slot="modify" slot-scope="text, record">
-                        <span>
-                            <a-button style="margin-right: 8px;" @click="() => edit(record.key)">修改密码</a-button>
-                            <a-button style="margin-right: 8px;" @click="() => edit(record.key)">修改</a-button>
-                        </span>
+                    :scroll="{ x: 1500 }"
+                >   
+                    <template slot="avatar" slot-scope="text, row">
+                        <img class="avatar" :src="row.avatar" alt="" />
+                    </template>
+                    <template slot="admin" slot-scope="text, row">
+                        <span>{{ row.admin | adminText }}</span>
+                    </template>
+                    <template slot="sex" slot-scope="text, row">
+                        <a-icon 
+                            :style="{
+                                fontSize: '22px',
+                                color: row.sex == 2 ? '#46B6EF' : '#F37E7D'
+                            }"
+                            type="user"
+                        ></a-icon>
+                    </template>
+
+                    <template slot="status" slot-scope="text">
+                        <a-badge
+                            :status="text | statusType"
+                            :text="text | statusText"
+                        ></a-badge>
+                    </template>
+                    <template slot="operation" >
+                        <el-button size="mini" type="primary" >编辑</el-button>
+                        <el-button
+                            size="mini"
+                            type="success"
+                        >发布</el-button>
+                        <el-button
+                            type="warning"
+                            size="mini"
+                        >关闭</el-button>
+                        <el-button
+                            size="mini"
+                            type="danger"
+                        >删除</el-button>
                     </template>
                 </a-table>
             </div>
@@ -69,171 +67,136 @@
 
 <script>
 import Head from '../components/common/Head'
-import moment from 'moment'
-import 'moment/locale/zh-cn'
-moment.locale('zh-cn')
+import { statusType,statusText,adminText } from '@/lib/filters';
 
-const columns = [
+const TableColumns = [
     {
-        title: '用户名',
-        dataIndex: 'name',
-        width: '10%',
+        title: '用户名称',
+        dataIndex: 'nickname',
+        width: 120,
+        fixed: 'left',
+        scopedSlots: { customRender: 'nickname' }
+    },
+    {
+        title: '用户名称',
+        dataIndex: 'avatar',
+        width: 85,
+        fixed: 'left',
         align: 'center',
-        scopedSlots: { customRender: 'name' }
-    }, 
+        scopedSlots: { customRender: 'avatar' }
+    },
+    {
+        title: '账号类型',
+        dataIndex: 'admin',
+        align: 'center',
+        width: 110,
+        scopedSlots: { customRender: 'admin' }
+    },
+    {
+        title: '用户账号',
+        dataIndex: 'phone',
+        align: 'center',
+        width: 105,
+    },
+    {
+        title: '用户性别',
+        dataIndex: 'sex',
+        align: 'center',
+        width: 85,
+        scopedSlots: { customRender: 'sex' }
+    },
+    {
+        title: '用户年龄',
+        align: 'center',
+        width: 85,
+        dataIndex: 'age'
+    },
+    {
+        title: '用户说明',
+        dataIndex: 'description'
+    },
+
+
+
     {
         title: '注册时间',
-        dataIndex: 'date',
+        dataIndex: 'createdAt',
+        width: 100,
         align: 'center',
-        width: '10%'
+        scopedSlots: { customRender: 'createdAt' }
     },
     {
-        title: '管理员类型',
-        dataIndex: 'Admin',
-        width: '8%',
-        align: 'center',
-        scopedSlots: { customRender: 'Admin' }
-    },
-    {
-        title: '状态',
+        title: '项目状态',
         dataIndex: 'status',
-        width: '8%',
         align: 'center',
+        width: 85,
         scopedSlots: { customRender: 'status' }
     },
     {
-        title: '说明',
-        dataIndex: 'descr',
-        scopedSlots: { customRender: 'descr' }
-    },
-    {
-        title: '操作',
-        dataIndex: 'modify',
-        width: '20%',
-        scopedSlots: { customRender: 'modify' }
+        title: '用户操作',
+        dataIndex: 'operation',
+        align: 'center',
+        width: 280,
+        fixed: 'right',
+        scopedSlots: { customRender: 'operation' }
     }
 ]
 
-const data = [
-    {
-        key: '1',
-        name: 'Vue',
-        user: 'Admin',
-        status: 1,
-        date: '2018-4-16',
-        descr: '尤雨溪开发的专注于构建用户界面的渐进式框架。'
-    }, 
-    {
-        key: '2',
-        name: 'React',
-        user: 'Admin',
-        status: 2,
-        date: '2018-5-3',
-        descr: '用于构建用户界面的 JS 库'
-    },
-    {
-        key: '3',
-        name: 'Nodejs',
-        user: 'Admin',
-        status: 1,
-        date: '2018-9-3',
-        descr: '一个基于 Chrome V8 引擎 的 JavaScript 运行时。'
-    },
-    {
-        key: '4',
-        name: 'HTML',
-        user: 'Admin',
-        status: 1,
-        date: '2018-2-3',
-        descr: '超文本标记语言，是一种用于创建网页的标准标记语言。'
-    },
-    {
-        key: '5',
-        name: 'JavaScript',
-        user: 'Admin',
-        status: 1,
-        date: '2018-2-3',
-        descr: 'JavaScript，通常缩写为JS，是一种高级的，直译语言的编程语言。'
-    },
-    {
-        key: '6',
-        name: 'TypeScript',
-        user: 'Admin',
-        status: 1,
-        date: '2017-9-22',
-        descr: 'TypeScript是JavaScript的一个超集，友微软开发即开源的编程语言。'
-    },
-    {
-        key: '7',
-        name: 'QuickApp',
-        user: 'Admin',
-        status: 1,
-        date: '2017-9-22',
-        descr: 'QuickApp是由国内十大手机厂商联合开发的移动互联网新型应用生态。'
-    }
-]
 
 export default {
     data () {
-        this.cacheData = data.map(item => ({ ...item }))
         return {
-            Table: [],
-            columns,
-            Tableload: false,
+            //表格配置
+            loading: false,
+            TableColumns,
+            TableData: [],
 
-            dateFormat: 'YYYY/MM/DD',
-            monthFormat: 'YYYY/MM',
-
-            //搜索配置
-            search: {
-                user: '',
-                status: ''
-            }
         }
     },
     filters: {
-        tags(key) {
-            return key == 1 ? '已开放' : '已关闭'
-        }
+        statusType: (v) => statusType(v),
+        statusText: (v) => statusText(v),
+        adminText: (v) => adminText(v)
     },
     created () {
-        this.__AdminAllUser()
+        this.getUserListFn()
     },
     methods: {
-        moment,
-        //搜索
-        handleSearch() {
-            let { status, user } = this.search
-            const hide = this.$message.loading('查询中  ···', 0)
-            setTimeout(hide, 5000)
-        },
-        //重置
-        handleReset() {
-            this.search.status = ''
-            this.search.user = ''
-        },
         //编辑
         edit (key) {
             
         },
         //获取所有用户
-        async __AdminAllUser() {
+        async getUserListFn() {
             try {
-                let res = await this.Api.AdminAllUser()
+                let res = await this.Api.getUserListFn()
                 
+                console.log(res)
                 if(res.code === 200) {
-                    let Table = res.data.map((el, k) => {
-                            el['key'] = k
-                        return el
-                    })
-                    this.Table = Table
-                } else {
-                    this.$message.error(res.message)
+                    this.TableData = this.TableMap(res.data)
                 }
             } catch (error) {
-                this.$message.error(error)
-                return
+                console.error(error)
             }
+        },
+        //表格数据格式化
+        TableMap(arr) {
+            if(!Array.isArray(arr)) return [];
+            let v = arr.map(k => ({
+                key: k.uid,
+                admin: k.admin,
+                age: k.age,
+                avatar: `http://localhost:9800${k.avatar}`,
+                createdAt: k.createdAt.slice(0,k.createdAt.indexOf('T')),
+                description: k.description,
+                nickname: k.nickname,
+                password: k.password,
+                phone: k.phone,
+                sex: k.sex,
+                status: k.status,
+                uid: k.uid
+            }))
+            return v
         }
     },
     components: {
@@ -249,14 +212,17 @@ export default {
     display flex
     flex-direction column
     .Back-Content{
-        margin 24px 24px 0
+        margin 16px 16px 0
         flex 1
         display flex
         flex-direction column
         background #ffffff
-        padding 24px 24px
+        padding 16px
 
-        
+        .avatar {
+            width 50px
+            height 50px
+        }
     }
 }
 </style>

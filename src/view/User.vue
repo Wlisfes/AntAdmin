@@ -20,9 +20,9 @@
                     <a-input placeholder="请输入密码" type="password" v-decorator="formRules.password" />
                 </a-form-item>
                 <a-form-item label="账户类型" v-bind="itemClo">
-                    <a-radio-group v-decorator="['Admin', { initialValue: 'visitor' }]">
-                        <a-radio value="visitor" checked>visitor</a-radio>
-                        <a-radio value="Admin">Admin</a-radio>
+                    <a-radio-group v-decorator="['admin', { initialValue: 'same' }]">
+                        <a-radio value="same" checked>same</a-radio>
+                        <a-radio value="admin">admin</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="昵称" v-bind="itemClo">
@@ -30,8 +30,8 @@
                 </a-form-item>
                 <a-form-item label="性别" v-bind="itemClo">
                     <a-radio-group v-decorator="['sex', { initialValue: 1 }]">
-                        <a-radio :value="1" checked>男</a-radio>
-                        <a-radio :value="0">女</a-radio>
+                        <a-radio :value="2" checked>男</a-radio>
+                        <a-radio :value="1">女</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="年龄" v-bind="itemClo">
@@ -42,7 +42,7 @@
                 </a-form-item>
                 <a-form-item label="头像" v-bind="itemClo">
                     <div class="Update" @click="imagecropperShow = true">
-                        <img :src="pictureUrl" v-if="pictureUrl" alt="" />
+                        <img :src="'http://localhost:9800'+pictureUrl" v-if="pictureUrl" alt="" />
                         <a-icon
                             v-else
                             style="font-size: 32px;color: #999;"
@@ -90,40 +90,23 @@ export default {
             },
             formRules: {
                 name: [
-                    'name',
-                    {
-                        rules: [
+                    'phone',{rules: [
                             { required: true, message: '用户名不能为空！' },
-                            { min: 4, max: 20, message: '用户名长度必须是4~20位之间！' },
-                            { pattern: /^[0-9a-zA-Z]+$/, message: '必须是数字跟字母！' }
-                        ]
-                    }
-                ],
+                            { pattern: /^1([38][0-9]|4[012345789]|5[0-3,4-9]|6[6]|7[01345678]|9[89])\d{8}$/, message: '必须是符合格式的手机号码！' }
+                ]}],
                 password: [
-                    'password',
-                    {
-                        rules: [
+                    'password',{rules: [
                             { required: true, message: '密码不能为空！' },
                             { min: 6, max: 20, message: '密码长度必须是4~20位之间！' }
-                        ]
-                    }
-                ],
+                ]}],
                 nickName: [
-                    'nickName',
-                    {
-                        rules: [
+                    'nickname',{rules: [
                             { required: true, message: '昵称不能为空！' }
-                        ]
-                    }
-                ],
+                ]}],
                 descr: [
-                    'descr',
-                    {
-                        rules: [
+                    'description',{rules: [
                             { required: true, message: '用户描述必填！' }
-                        ]
-                    }
-                ]
+                ]}]
             },
 
             pictureUrl: '',
@@ -132,47 +115,49 @@ export default {
         }
     },
     methods: {
+        //表单提交
         handleSubmit (e) {
             e.preventDefault();
-                this.form.validateFields((err, values) => {
-                    if (!err) {
-                        this.__AdminEnrolment(values)
-                        console.log(values)
-                    }
-                });
+            this.form.validateFields((err, values) => {
+                if (!err) {
+                    this.postUser(values)
+                    console.log(values)
+                }
+            });
         },
-        async __AdminEnrolment(formValue) {
-            let { Admin,age,descr,name,nickName,password,sex,upload } = formValue
+        //注册
+        async postUser(formValue) {
+            let { admin,age,description,phone,nickname,password,sex } = formValue
             try {
-                let res = await this.Api.AdminEnrolment({
-                    Admin,
+                let res = await this.Api.postUser({
+                    admin,
                     age,
-                    descr,
-                    name,
-                    nickName,
+                    description,
+                    phone,
+                    nickname,
                     password,
                     sex,
-                    Avatar: upload && upload.file.response.url ? upload.file.response.url : ''
+                    avatar: this.pictureUrl
                 })
                 
-                console.log(res)
+                if(res.code === 200) {
+                    this.$notification.success({ message: '注册成功！', duration: 1.5, description: '' })
+                }
             } catch (error) {
-                
+                console.error(error)
             }
         },
+        //头像上传
         async cropSuccess(resData) {
             this.imagecropperShow = false
             this.imagecropperKey = this.imagecropperKey + 1
-
             try {
                 let res = await upload(resData, '/upload')
-                console.log(res)
-
                 if(res.code === 200) {
-                    this.pictureUrl = `http://localhost:9800${res.data.pictureUrl}`
+                    this.pictureUrl = res.data.pictureUrl//`http://localhost:9800${res.data.pictureUrl}`
                 }
             } catch (error) {
-                
+                console.error(error)
             }
         },
         close() {

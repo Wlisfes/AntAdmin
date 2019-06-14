@@ -2,7 +2,7 @@
  * @Date: 2019-06-14 15:24:31
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-14 16:44:54
+ * @LastEditTime: 2019-06-14 22:00:16
  * @Description: 包装编辑器
  -->
 
@@ -15,11 +15,11 @@
             theme="OneDark"
             :toolbars="markdown.Toolcofn"
             :autoSave="markdown.autoSave"
-            :initialValue="markdown.initialValue"
+            :initialValue="Textvalue"
             @on-save="save"
         />
         <up @crop-upload="cropSuccess" ref="ups" />
-        <div class="save">
+        <div class="save" v-show="showSave">
             <a-button
                 @click="Empty"
                 icon="sync"
@@ -38,13 +38,26 @@
 import up from '@/components/Upload/up'
 import MarkDown  from 'vue-meditor'
 export default {
+    props: {
+        showSave: {
+            type: Boolean,
+            default: () => true
+        },
+        Textvalue: {
+            type: String,
+            default: () => ""
+        },
+        height: {
+            type: Number,
+            default: () => 0
+        }
+    },
     data () {
         return {
             //编辑器配置
             markdown: {
                 mode: 1,
                 autoSave: false,
-                initialValue: ``,
                 Toolcofn: {
                     image: false
                 },
@@ -60,7 +73,13 @@ export default {
     },
     computed: {
         get__Styke() {
-            return this.markdown.height > 600 ? { minHeight: '100%' } : { minHeight: '600px' }
+            let height = this.height
+            if(height > 0) {
+                return { minHeight: `${height}px`, height: `${height}px` }
+            }
+            else {
+                return this.markdown.height > 600 ? { minHeight: '100%' } : { minHeight: '600px' }
+            }
         }
     },
     methods: {
