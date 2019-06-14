@@ -9,31 +9,12 @@
 <template>
     <div class="root">
         <Head title="新增笔记"></Head>
-        <div class="Back-Content" ref="Content">
-            <mark-down
-                ref="markdown"
-                :style="get__Styke"
-                theme="OneDark"
-                :autoSave="markdown.autoSave"
-                :initialValue="markdown.initialValue"
-                @on-save="save"
-            ></mark-down>
-            <div class="save">
-                <a-button
-                    @click="Empty"
-                    icon="sync"
-                    style="margin-right: 16px;"
-                >清空</a-button>
-                <a-button
-                    @click="handleSave"
-                    type="primary"
-                    icon="save"
-                >保存</a-button>
-            </div>
+        <div class="Back-Content">
+            <meditor @save="save"/>
         </div>
         <notes-create-form
-            :visible="pushModal.visible"
-            @cancel="() => { pushModal.visible = false }"
+            :visible="visible"
+            @cancel="() => { visible = false }"
             @create="createBook"
         ></notes-create-form>
     </div>
@@ -41,70 +22,41 @@
 
 <script>
 import Head from '@/components/common/Head'     //OneDark
+import meditor from '@/components/Upload/meditor'
 import NotesCreateForm from '@/components/common/NotesCreateForm'
-import MarkDown  from 'vue-meditor'
 export default {
     data () {
         return {
-            //编辑器配置
-            markdown: {
-                mode: 1,
-                autoSave: false,
-                initialValue: ``,
+            //编辑器save
+            mark: {
                 Text: '',
                 Textvalue: '',
-                theme: 'OneDark',
-                height: 600
+                theme: 'OneDark'
             },
+     
+            //弹窗
+            visible: false
             
-            //新增弹窗配置
-            pushModal: {
-                visible: false
-            }
-            
-        }
-    },
-    created() {
-        this.getTagsOpenListFn()
-    },
-    mounted () {
-        this.$nextTick(() => {
-            this.markdown.height = this.$refs.Content.clientHeight
-        })
-    },
-    computed: {
-        get__Styke() {
-            return this.markdown.height > 600 ? { minHeight: '100%' } : { minHeight: '600px' }
         }
     },
     methods: {
         //监听保存事件
-        save(e) {
-            this.markdown.Text = e.html
-            this.markdown.theme = e.theme
-            this.markdown.Textvalue = e.value
-            this.pushModal.visible = true
-            // this.$refs.markdown.insertContent('\n![image](http://hacgapp.com/img/topBG.jpg)');
-        },
-        //清空
-        Empty() {
-            this.$refs.markdown.value = ''
-        },
-        //手动触发保存
-        handleSave() {
-            this.$refs.markdown.handleSave()
+        save({ html,theme,value }) {
+            this.mark.Text = html
+            this.mark.theme = theme
+            this.mark.Textvalue = value
+            this.visible = true
         },
         //新增笔记
         async createBook({ name,description,tags,weights }) {
             try {
-                this.Empty()
-                this.pushModal.visible = false
+                this.visible = false
                 this.$message.loading('数据发送中......', 0)
                 let res = await this.Api.SubmitBookFn({
                     name,
-                    theme: this.markdown.theme,
-                    Text: this.markdown.Text,
-                    Textvalue: this.markdown.Textvalue,
+                    theme: this.mark.theme,
+                    Text: this.mark.Text,
+                    Textvalue: this.mark.Textvalue,
                     tags,
                     weights,
                     description
@@ -116,23 +68,11 @@ export default {
             } catch (error) {
                 console.error(error)
             }
-        },
-        //标签列表
-        async getTagsOpenListFn() {
-            try {
-                let res = await this.Api.getTagsOpenListFn()
-
-                if(res.code === 200) {
-                    this.tagse = res.data
-                }
-            } catch (error) {
-                console.log(error)
-            }
         }
     },
     components: {
         Head,
-        MarkDown,
+        meditor,
         NotesCreateForm
     }
 }
@@ -152,11 +92,6 @@ export default {
         background #ffffff
         padding 16px
         position relative
-        .save {
-            position absolute
-            right 16px
-            bottom 16px
-        }
     }
 }
 </style>
