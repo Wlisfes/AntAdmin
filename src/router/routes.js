@@ -14,6 +14,9 @@ export default [
         path: '/login',
         name: 'login',
         Title: '登录',
+        meta: {
+            title: '登录'
+        },
         component: Login
     },
     {
@@ -25,56 +28,98 @@ export default [
             {
                 path: '/main',
                 name: 'main',
-                Title: '主页',
+                meta: {
+                    title: '主页'
+                },
                 component: () => import('../view/Main.vue')
             },
             {
                 path: '/user',
                 name: 'user',
-                Title: '用户注册',
+                meta: {
+                    title: '用户注册'
+                },
                 component: () => import('../view/User.vue')
             },
             {
                 path: '/userlist',
                 name: 'userlist',
-                Title: '用户列表',
+                meta: {
+                    title: '用户列表'
+                },
                 component: () => import('../view/Userlist.vue')
             },
             {
                 path: '/articlelist',
                 name: 'articlelist',
-                Title: '文章列表',
+                meta: {
+                    title: '文章列表'
+                },
                 component: () => import('../view/Articlelist.vue')
             },
             {
                 path: '/article',
                 name: 'article',
-                Title: '新增文章',
+                meta: {
+                    title: '新增文章'
+                },
                 component: () => import('../view/Article.vue')
             },
             {
                 path: '/noteslist',
                 name: 'noteslist',
-                Title: '笔记列表',
+                meta: {
+                    title: '笔记列表'
+                },
                 component: () => import('../view/Noteslist.vue')
             },
             {
                 path: '/notes',
                 name: 'notes',
-                Title: '新增笔记',
+                meta: {
+                    title: '新增笔记'
+                },
                 component: () => import('../view/Notes.vue')
             },
             {
                 path: '/taslist',
                 name: 'taslist',
-                Title: '标签列表',
+                meta: {
+                    title: '标签列表'
+                },
                 component: () => import('../view/Taslist.vue')
             },
             {
                 path: '/thinglist',
                 name: 'thinglist',
-                Title: '项目列表',
+                meta: {
+                    title: '项目列表'
+                },
                 component: () => import('../view/Thinglist.vue')
+            },
+            {
+                path: '/github',
+                name: 'github',
+                meta: {
+                    title: 'GitHub'
+                },
+                component: () => import('../view/GitHub.vue')
+            },
+            {
+                path: '/person',
+                name: 'person',
+                meta: {
+                    title: '个人中心'
+                },
+                component: () => import('../view/Person.vue')
+            },
+            {
+                path: '/setting',
+                name: 'setting',
+                meta: {
+                    title: '账户设置'
+                },
+                component: () => import('../view/Setting.vue')
             }
         ]
     }
