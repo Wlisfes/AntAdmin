@@ -54,6 +54,8 @@
 
 <script>
 const backUrl = require("@/assets/image/topBG.png")
+import { mapMutations } from 'vuex'
+
 export default {
     data() {
         return {
@@ -80,6 +82,9 @@ export default {
         })
     },
     methods: {
+        ...mapMutations([
+            'set_Token'
+        ]),
         handleSubmit(e) {
             e.preventDefault()
             this.form.validateFields((err, values) => {
@@ -92,8 +97,9 @@ export default {
         async login({ phone,password }) {
             try {
                 this.logging = true
-                var res = await this.Api.loginFN({ phone,password })
+                var res = await this.Api.loginFn({ phone,password })
                 if (res.code === 200) {
+                    this.set_Token(res.data)
                     this.Aux.setStore(res.data)
                     this.$notification.success({ message: '登录成功！', description: '', duration: 1.5 })
                     this.$router.replace({ path: `/` })

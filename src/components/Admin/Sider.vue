@@ -61,7 +61,7 @@ export default {
                 },
                 {
                     key: '1',
-                    icon: 'dashboard',
+                    icon: 'team',
                     title: '用户管理',
                     children: [
                         { key: '1-1', title: '用户列表', path: '/userlist' },
@@ -100,6 +100,23 @@ export default {
                     title: '项目管理',
                     children: [
                         { key: '5-1', title: '项目列表', path: '/thinglist' }
+                    ]
+                },
+                {
+                    key: '6',
+                    icon: 'github',
+                    title: '友链管理',
+                    children: [
+                        { key: '6-1', title: 'GitHub', path: '/github' }
+                    ]
+                },
+                {
+                    key: '7',
+                    icon: 'user',
+                    title: '账户',
+                    children: [
+                        { key: '7-1', title: '个人中心', path: '/person' },
+                        { key: '7-2', title: '账户设置', path: '/setting' }
                     ]
                 }
             ]

@@ -31,12 +31,12 @@ export default {
     display flex
     flex-direction column
     .Back-Content{
-        margin 24px 24px 0
+        margin 16px 16px 0
         flex 1
         display flex
         flex-direction column
         background #ffffff
-        padding 24px 24px
+        padding 16px
 
         
     }
