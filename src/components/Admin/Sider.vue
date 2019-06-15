@@ -11,22 +11,24 @@
         id="Sider"
         :trigger="null"
         :collapsible="true"
-        :width="200"
-        theme="light"
+        :width="240"
+        theme="dark"
         :collapsed="collapsed"
         breakpoint="xl"
         @breakpoint="iSpoint"
     >
-        <div class="logo">
+        <div class="logo" @click="openHome">
             <router-link to="/">
                 <img src="http://localhost:9800/assets/album/515b52bc8f191.png" />
             </router-link>
         </div>
-        <a-menu theme="light" 
+        <a-menu theme="dark" 
                 mode="inline" 
-                :openKeys="openKeys"
-                :defaultSelectedKeys="defaultSelectedKeys"
+                :openKeys="get_openKeys"
+                :defaultSelectedKeys="get_defaultSelectedKeys"
+                :selectedKeys="get_selectedKeys"
                 @openChange="onOpenChange"
+                @select="select"
                 style="border-right: none;">
             <a-sub-menu v-for="m in Menu" :key="m.key">
                 <span slot="title"><a-icon style="font-size: 16px;" :type="m.icon" /><span v-html="m.title"></span></span>
@@ -39,6 +41,7 @@
 </template>
 
 <script>
+import { mapGetters,mapMutations } from 'vuex'
 export default {
     props: {
         collapsed: {
@@ -50,7 +53,7 @@ export default {
             Menu: [
                 {
                     key: '0',
-                    icon: 'dashboard',
+                    icon: 'home',
                     title: '主页',
                     children: [
                         { key: '0-1', title: '首页', path: '/' }
@@ -99,23 +102,44 @@ export default {
                         { key: '5-1', title: '项目列表', path: '/thinglist' }
                     ]
                 }
-            ],
-            openKeys: ['0'],
-            defaultSelectedKeys: ['0-1']
+            ]
         }
     },
+    computed: {
+        ...mapGetters([
+            'get_openKeys',
+            'get_defaultSelectedKeys',
+            'get_selectedKeys'
+        ]),
+    },
     methods: {
+        ...mapMutations([
+            'set_openKeys',
+            'set_selectedKeys',
+            'set_defaultSelectedKeys'
+        ]),
         iSpoint(e) {
             this.$emit('ispoint', e)
         },
         onOpenChange (openKeys) {
-            const latestOpenKey = openKeys.find(key => this.openKeys.indexOf(key) === -1)
+            const latestOpenKey = openKeys.find(key => this.get_openKeys.indexOf(key) === -1)
             const menu = this.Menu.map(el => el.key)
             if (menu.indexOf(latestOpenKey) === -1) {
-                this.openKeys = openKeys
+                this.set_openKeys(openKeys)
             } else {
-                this.openKeys = latestOpenKey ? [latestOpenKey] : []
+                let Keys = latestOpenKey ? [latestOpenKey] : []
+                this.set_openKeys(Keys)
             }
+        },
+        select(e) {
+            this.set_defaultSelectedKeys(e.selectedKeys)
+            this.set_selectedKeys(e.selectedKeys)
+        },
+        //回到首页
+        openHome() {
+            this.set_openKeys(['0'])
+            this.set_defaultSelectedKeys(['0-1'])
+            this.set_selectedKeys(['0-1'])
         }
     }
 

@@ -23,7 +23,8 @@
                     :scroll="{ x: 1500 }"
                 >   
                     <template slot="avatar" slot-scope="text, row">
-                        <img class="avatar" :src="row.avatar" alt="" />
+                        <!-- <img class="avatar" :src="row.avatar" alt="" /> -->
+                        <img class="avatar" :src="'http://localhost:9800' + row.avatar" alt="" />
                     </template>
                     <template slot="admin" slot-scope="text, row">
                         <span>{{ row.admin | adminText }}</span>
@@ -37,48 +38,71 @@
                             type="user"
                         ></a-icon>
                     </template>
-
+                    <!-- <template slot="description" slot-scope="text">
+                        <div style="height: 40px;overflow-y: auto;">
+                            {{text}}
+                        </div>
+                    </template> -->
                     <template slot="status" slot-scope="text">
                         <a-badge
                             :status="text | statusType"
                             :text="text | statusText"
                         ></a-badge>
                     </template>
-                    <template slot="operation" >
-                        <el-button size="mini" type="primary" >编辑</el-button>
+                    <template slot="operation" slot-scope="text, row">
                         <el-button
+                            @click="editStart(row)"
+                            size="mini"
+                            type="primary"
+                        >编辑</el-button>
+                        <el-button
+                            @click="open(row.uid)"
                             size="mini"
                             type="success"
                         >发布</el-button>
                         <el-button
+                            @click="down(row.uid)"
                             type="warning"
                             size="mini"
                         >关闭</el-button>
-                        <el-button
-                            size="mini"
-                            type="danger"
-                        >删除</el-button>
                     </template>
                 </a-table>
             </div>
         </div>
+
+        <!-- 用户资料编辑弹窗 -->
+        <user-edit-form
+            :visible="editModal.visible"
+            :uid="editModal.uid"
+            :phone="editModal.phone"
+            :password="editModal.password"
+            :admin="editModal.admin"
+            :nickname="editModal.nickname"
+            :sex="editModal.sex"
+            :age="editModal.age"
+            :avatar="editModal.avatar"
+            :description="editModal.description"
+            @cancel="() => { editModal.visible = false }"
+            @create="editEnd"
+        ></user-edit-form>
     </div>
 </template>
 
 <script>
-import Head from '../components/common/Head'
+import Head from '@/components/common/Head';
+import UserEditForm from '@/components/common/UserEditForm';
 import { statusType,statusText,adminText } from '@/lib/filters';
 
 const TableColumns = [
     {
-        title: '用户名称',
+        title: '用户昵称',
         dataIndex: 'nickname',
         width: 120,
         fixed: 'left',
         scopedSlots: { customRender: 'nickname' }
     },
     {
-        title: '用户名称',
+        title: '用户头像',
         dataIndex: 'avatar',
         width: 85,
         fixed: 'left',
@@ -113,11 +137,9 @@ const TableColumns = [
     },
     {
         title: '用户说明',
-        dataIndex: 'description'
+        dataIndex: 'description',
+        scopedSlots: { customRender: 'description' }
     },
-
-
-
     {
         title: '注册时间',
         dataIndex: 'createdAt',
@@ -151,6 +173,20 @@ export default {
             TableColumns,
             TableData: [],
 
+            //编辑弹窗配置
+            editModal: {
+                visible: false,
+                uid: '',
+                phone: null,
+                password: '',
+                admin: '',
+                nickname: '',
+                sex: 1,
+                age: 18,
+                avatar: '',
+                description: ''
+            }
+            
         }
     },
     filters: {
@@ -163,21 +199,76 @@ export default {
     },
     methods: {
         //编辑
-        edit (key) {
-            
+        editStart (row) {
+            this.editModal.uid = row.uid
+            this.editModal.phone = row.phone
+            this.editModal.password = row.password
+            this.editModal.admin = row.admin
+            this.editModal.nickname = row.nickname
+            this.editModal.sex = row.sex
+            this.editModal.age = row.age
+            this.editModal.avatar = row.avatar
+            this.editModal.description = row.description
+            this.editModal.visible = true
+        },
+        //编辑保存
+        async editEnd({ phone,password,nickname,sex,age,description,uid,admin }) {
+            try {
+                this.loading = true
+                this.editModal.visible = false
+                let res = await this.Api.UpdateUser({
+                    phone,password,nickname,sex,age,description,uid,admin
+                })
+                if(res.code === 200) {
+                    this.TableData = this.TableMap(res.data)
+                    this.$notification.success({ message: '修改成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
+        },
+        //发布
+        async open(uid) {
+            try {
+                this.loading = true
+                let res = await this.Api.OpenUserFn({ uid })
+                if(res.code === 200) {
+                    this.TableData = this.TableMap(res.data)
+                    this.$notification.success({ message: '发布成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
+        },
+        //关闭
+        async down(uid) {
+            try {
+                this.loading = true
+                let res = await this.Api.OpenDownFn({ uid })
+                if(res.code === 200) {
+                    this.TableData = this.TableMap(res.data)
+                    this.$notification.success({ message: '关闭成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
         },
         //获取所有用户
         async getUserListFn() {
             try {
+                this.loading = true
                 let res = await this.Api.getUserListFn()
                 
-                console.log(res)
                 if(res.code === 200) {
                     this.TableData = this.TableMap(res.data)
                 }
             } catch (error) {
                 console.error(error)
             }
+            this.loading = false
         },
         //表格数据格式化
         TableMap(arr) {
@@ -186,7 +277,7 @@ export default {
                 key: k.uid,
                 admin: k.admin,
                 age: k.age,
-                avatar: `http://localhost:9800${k.avatar}`,
+                avatar: k.avatar,
                 createdAt: k.createdAt.slice(0,k.createdAt.indexOf('T')),
                 description: k.description,
                 nickname: k.nickname,
@@ -200,7 +291,8 @@ export default {
         }
     },
     components: {
-        Head
+        Head,
+        UserEditForm
     }
 }
 </script>

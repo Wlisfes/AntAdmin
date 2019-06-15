@@ -13,8 +13,8 @@
         <div class="Back-Content">
             
             <a-form :form="form" @submit="handleSubmit">
-                <a-form-item label="用户名" v-bind="itemClo">
-                    <a-input placeholder="请输入用户名" v-decorator="formRules.name" />
+                <a-form-item label="手机号" v-bind="itemClo">
+                    <a-input placeholder="请输入手机号" v-decorator="formRules.phone" />
                 </a-form-item>
                 <a-form-item label="密码" v-bind="itemClo">
                     <a-input placeholder="请输入密码" type="password" v-decorator="formRules.password" />
@@ -26,7 +26,7 @@
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="昵称" v-bind="itemClo">
-                    <a-input placeholder="请输入昵称" v-decorator="formRules.nickName" />
+                    <a-input placeholder="请输入昵称" v-decorator="formRules.nickname" />
                 </a-form-item>
                 <a-form-item label="性别" v-bind="itemClo">
                     <a-radio-group v-decorator="['sex', { initialValue: 1 }]">
@@ -42,7 +42,7 @@
                 </a-form-item>
                 <a-form-item label="头像" v-bind="itemClo">
                     <div class="Update" @click="imagecropperShow = true">
-                        <img :src="'http://localhost:9800'+pictureUrl" v-if="pictureUrl" alt="" />
+                        <img :src="pictureUrl" v-if="pictureUrl" alt="" />
                         <a-icon
                             v-else
                             style="font-size: 32px;color: #999;"
@@ -71,9 +71,9 @@
 </template>
 
 <script>
-import Head from '../components/common/Head'
+import Head from '@/components/common/Head'
 import upload from '@/Api/upload'
-import cropper from '../components/Upload/index'
+import cropper from '@/components/Upload/index'
 export default {
     data () {
         return {
@@ -89,9 +89,9 @@ export default {
                 }
             },
             formRules: {
-                name: [
+                phone: [
                     'phone',{rules: [
-                            { required: true, message: '用户名不能为空！' },
+                            { required: true, message: '手机号不能为空！' },
                             { pattern: /^1([38][0-9]|4[012345789]|5[0-3,4-9]|6[6]|7[01345678]|9[89])\d{8}$/, message: '必须是符合格式的手机号码！' }
                 ]}],
                 password: [
@@ -99,7 +99,7 @@ export default {
                             { required: true, message: '密码不能为空！' },
                             { min: 6, max: 20, message: '密码长度必须是4~20位之间！' }
                 ]}],
-                nickName: [
+                nickname: [
                     'nickname',{rules: [
                             { required: true, message: '昵称不能为空！' }
                 ]}],
@@ -154,7 +154,9 @@ export default {
             try {
                 let res = await upload(resData, '/upload')
                 if(res.code === 200) {
-                    this.pictureUrl = res.data.pictureUrl//`http://localhost:9800${res.data.pictureUrl}`
+                    // this.pictureUrl = `http://localhost:9800${res.data.pictureUrl}`
+                    // this.pictureUrl = `http://admin.lisfes.cn/server/static${res.data.pictureUrl}`
+                    this.pictureUrl = res.data.pictureUrl
                 }
             } catch (error) {
                 console.error(error)
@@ -178,12 +180,12 @@ export default {
     display flex
     flex-direction column
     .Back-Content{
-        margin 24px 24px 0
+        margin 16px 16px 0
         flex 1
         display flex
         flex-direction column
         background #ffffff
-        padding 24px 24px
+        padding 16px
 
         .ant-upload-select-picture-card i {
             font-size: 32px;

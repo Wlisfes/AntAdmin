@@ -97,7 +97,7 @@ const TableColumns = [
     {
         title: '笔记名称',
         dataIndex: 'name',
-        width: 120,
+        width: 180,
         fixed: 'left',
         scopedSlots: { customRender: 'name' }
     },

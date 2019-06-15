@@ -38,7 +38,7 @@ export default {
     },
     computed: {
         getWidth() {
-            return this.collapsed ? "80px" : "200px"
+            return this.collapsed ? "80px" : "240px"
         }
     },
     methods: {
@@ -60,7 +60,7 @@ export default {
 <style lang="stylus" scoped>
 #Admin {
     .Content {
-        padding-left 200px
+        padding-left 240px
         transition padding .2s
         display flex
         flex-direction column

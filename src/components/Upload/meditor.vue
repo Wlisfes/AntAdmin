@@ -2,7 +2,7 @@
  * @Date: 2019-06-14 15:24:31
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-14 22:00:16
+ * @LastEditTime: 2019-06-15 16:08:54
  * @Description: 包装编辑器
  -->
 
@@ -97,7 +97,9 @@ export default {
         },
         //图片上传
         cropSuccess(result) {
-            let pathUrl = `http://localhost:9800${result.data.pictureUrl}`
+            let pathUrl = result.data.pictureUrl
+            // let pathUrl = `http://admin.lisfes.cn/server/static${result.data.pictureUrl}`
+            // let pathUrl = `http://localhost:9800${result.data.pictureUrl}`
             this.$refs.markdown.insertContent('\n![image]('+ pathUrl +')');
         }
     },
