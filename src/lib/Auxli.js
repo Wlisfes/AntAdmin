@@ -23,7 +23,7 @@ export const isToken = () => {
 export const getStore = () => {
     const token = Cookies.get(TOKEN_KEY)
     if(token) {
-        return JSON.parse(aesDecrypt(token, CRYPTO_KEY))
+        return JSON.parse(token)//JSON.parse(aesDecrypt(token, CRYPTO_KEY))
     }  
     else {
         return null
@@ -33,8 +33,8 @@ export const getStore = () => {
 
 //储存Token
 export const setStore = token => {
-    let v = aesEncrypt(typeof token === 'string' ? token : JSON.stringify(token), CRYPTO_KEY)
-    Cookies.set(TOKEN_KEY, v, { expires: 1 })
+    // let v = aesEncrypt(typeof token === 'string' ? token : JSON.stringify(token), CRYPTO_KEY)
+    Cookies.set(TOKEN_KEY, JSON.stringify(token), { expires: 1 })
 }
 
 //删除Token
@@ -48,7 +48,7 @@ export const removesetStore = () => {
  * @param { String } data
  * @param { String } key
  */
-const aesEncrypt = (data, key) => {
+export const aesEncrypt = (data, key) => {
     const cipher = crypto.createCipher('aes192', key);
     var crypted = cipher.update(data, 'utf8', 'hex');
     crypted += cipher.final('hex');
@@ -60,7 +60,7 @@ const aesEncrypt = (data, key) => {
  * @param { String } data
  * @param { String } key
  */
-const aesDecrypt = (data, key) => {
+export const aesDecrypt = (data, key) => {
     const decipher = crypto.createDecipher('aes192', key);
     var decrypted = decipher.update(data, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
