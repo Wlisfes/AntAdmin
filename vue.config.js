@@ -12,6 +12,7 @@ module.exports = {
         proxy: {
             '/api': {
                 target: 'http://localhost:9800',
+                // target: 'http://admin.lisfes.cn',
                 ws: false,
                 changeOrigin: true
             }

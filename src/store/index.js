@@ -1,22 +1,19 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import createLogger from 'vuex/dist/logger'
-const debug = process.env.NODE_ENV !== 'production'
 
+import state from './state'
+import getters from './getters'
+import mutations from './mutations'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    state: {},
-    mutations: {},
+    state,
+    mutations,
+    getters,
     actions: {},
-
-    strict: debug,
     plugins: [
-        createPersistedState({
-          storage: window.sessionStorage
-        }),
-        debug ? createLogger() : ""
+      createPersistedState({ storage: window.sessionStorage })
     ]
 })
