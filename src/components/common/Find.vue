@@ -2,7 +2,7 @@
  * @Date: 2019-06-10 16:34:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-12 23:36:24
+ * @LastEditTime: 2019-06-16 20:40:04
  * @Description: 表格头部查找组件
  -->
 
@@ -14,7 +14,7 @@
         @submit="(e) => { find(e) }"
         class="find"
     >
-        <a-form-item label="作者">
+        <a-form-item label="作者" v-show="uservisible">
             <a-select
                 placeholder='请选择'
                 style="min-width: 174px;"
@@ -86,6 +86,10 @@ moment.locale('zh-cn');
 export default {
     props: {
         plusvisible: {
+            type: Boolean,
+            default: () => true
+        },
+        uservisible: {
             type: Boolean,
             default: () => true
         }

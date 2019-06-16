@@ -6,8 +6,8 @@
  * @Types 界面路由
  */
 
-import Admin from '../view/Admin'
-import Login from '../view/Login'
+import Admin from '@/view/Admin'
+import Login from '@/view/Login'
 
 export default [
     {
@@ -31,7 +31,7 @@ export default [
                 meta: {
                     title: '主页'
                 },
-                component: () => import('../view/Main.vue')
+                component: () => import('@/view/Main.vue')
             },
             {
                 path: '/user',
@@ -39,7 +39,7 @@ export default [
                 meta: {
                     title: '用户注册'
                 },
-                component: () => import('../view/User.vue')
+                component: () => import('@/view/User.vue')
             },
             {
                 path: '/userlist',
@@ -47,7 +47,7 @@ export default [
                 meta: {
                     title: '用户列表'
                 },
-                component: () => import('../view/Userlist.vue')
+                component: () => import('@/view/Userlist.vue')
             },
             {
                 path: '/articlelist',
@@ -55,7 +55,7 @@ export default [
                 meta: {
                     title: '文章列表'
                 },
-                component: () => import('../view/Articlelist.vue')
+                component: () => import('@/view/Articlelist.vue')
             },
             {
                 path: '/article',
@@ -63,7 +63,7 @@ export default [
                 meta: {
                     title: '新增文章'
                 },
-                component: () => import('../view/Article.vue')
+                component: () => import('@/view/Article.vue')
             },
             {
                 path: '/noteslist',
@@ -71,7 +71,7 @@ export default [
                 meta: {
                     title: '笔记列表'
                 },
-                component: () => import('../view/Noteslist.vue')
+                component: () => import('@/view/Noteslist.vue')
             },
             {
                 path: '/notes',
@@ -79,7 +79,7 @@ export default [
                 meta: {
                     title: '新增笔记'
                 },
-                component: () => import('../view/Notes.vue')
+                component: () => import('@/view/Notes.vue')
             },
             {
                 path: '/taslist',
@@ -87,7 +87,7 @@ export default [
                 meta: {
                     title: '标签列表'
                 },
-                component: () => import('../view/Taslist.vue')
+                component: () => import('@/view/Taslist.vue')
             },
             {
                 path: '/thinglist',
@@ -95,7 +95,7 @@ export default [
                 meta: {
                     title: '项目列表'
                 },
-                component: () => import('../view/Thinglist.vue')
+                component: () => import('@/view/Thinglist.vue')
             },
             {
                 path: '/github',
@@ -103,7 +103,7 @@ export default [
                 meta: {
                     title: 'GitHub'
                 },
-                component: () => import('../view/GitHub.vue')
+                component: () => import('@/view/GitHub.vue')
             },
             {
                 path: '/person',
@@ -111,7 +111,7 @@ export default [
                 meta: {
                     title: '个人中心'
                 },
-                component: () => import('../view/Person.vue')
+                component: () => import('@/view/Person.vue')
             },
             {
                 path: '/setting',

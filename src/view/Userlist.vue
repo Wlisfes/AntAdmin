@@ -15,7 +15,7 @@
                     :columns="TableColumns"
                     :dataSource="TableData"
                     bordered
-                    size="middle"
+                    size="small"
                     :loading="loading"
                     :locale="{
                         emptyText: '暂无数据'
