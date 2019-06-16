@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import UserItem from '@/components/common/UserItem'
+import UserItem from '@/components/Main/UserItem'
 import Trend from '@/components/Main/Trend'
 import Chain from '@/components/Main/Chain'
 import Chart from '@/components/Main/Chart'

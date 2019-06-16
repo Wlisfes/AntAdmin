@@ -23,8 +23,8 @@
                     :scroll="{ x: 1500 }"
                 >   
                     <template slot="avatar" slot-scope="text, row">
-                        <!-- <img class="avatar" :src="row.avatar" alt="" /> -->
-                        <img class="avatar" :src="'http://localhost:9800' + row.avatar" alt="" />
+                        <img class="avatar" :src="row.avatar" alt="" />
+                        <!-- <img class="avatar" :src="'http://localhost:9800' + row.avatar" alt="" /> -->
                     </template>
                     <template slot="admin" slot-scope="text, row">
                         <span>{{ row.admin | adminText }}</span>

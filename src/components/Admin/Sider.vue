@@ -19,7 +19,7 @@
     >
         <div class="logo" @click="openHome">
             <router-link to="/">
-                <img src="http://localhost:9800/assets/album/515b52bc8f191.png" />
+                <img :src="get_Token.avatar || 'http://admin.lisfes.cn/server/static/assets/album/515b52bc8f191.png'"/>
             </router-link>
         </div>
         <a-menu theme="dark" 
@@ -126,7 +126,8 @@ export default {
         ...mapGetters([
             'get_openKeys',
             'get_defaultSelectedKeys',
-            'get_selectedKeys'
+            'get_selectedKeys',
+            'get_Token'
         ]),
     },
     methods: {

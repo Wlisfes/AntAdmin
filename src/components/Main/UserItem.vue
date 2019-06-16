@@ -2,14 +2,15 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 19:04:02
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-15 22:29:46
+ * @LastEditTime: 2019-06-16 16:01:49
  * @Description: 用户信息展示组件
  -->
 
 
 <template>
     <div class="UserStyle">
-        <a-avatar class="Avatar" :src="'http://localhost:9800' + get_Token.avatar" />
+        <!-- <a-avatar class="Avatar" :src="'http://localhost:9800' + get_Token.avatar" /> -->
+        <a-avatar class="Avatar" :src="get_Token.avatar" />
         <div class="title-box">
             <p class="title" v-html="get__timeFix + '，' + get_Token.nickname + '，' + get__welcome"></p>
             <span>菜鸟前端工程师 | 正棋集团 - 某某某事业群 - VUE平台</span>

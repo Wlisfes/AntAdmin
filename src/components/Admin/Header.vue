@@ -27,7 +27,7 @@
                     }"
                 >
                     <span class="action ant-dropdown-link user-dropdown-menu">
-                        <a-avatar class="avatar"  src="http://localhost:9800/assets/album/515b52bc8f191.png"/>
+                        <a-avatar class="avatar" :src="get_Token.avatar || 'http://admin.lisfes.cn/server/static/assets/album/515b52bc8f191.png'"/>
                         <span>情雨随风</span>
                     </span>
                     <a-menu slot="overlay" style="width: 160px;">
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations,mapGetters } from 'vuex'
 export default {
     props: {
         collapsed: {
@@ -87,6 +87,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters([
+            'get_Token'
+        ]),
         getWidth() {
             return this.collapsed ? "calc(100% - 80px)" : "calc(100% - 240px)"
         },
