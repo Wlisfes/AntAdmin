@@ -202,7 +202,6 @@ export default {
         editStart (row) {
             this.editModal.uid = row.uid
             this.editModal.phone = row.phone
-            this.editModal.password = row.password
             this.editModal.admin = row.admin
             this.editModal.nickname = row.nickname
             this.editModal.sex = row.sex
@@ -281,7 +280,6 @@ export default {
                 createdAt: k.createdAt.slice(0,k.createdAt.indexOf('T')),
                 description: k.description,
                 nickname: k.nickname,
-                password: k.password,
                 phone: k.phone,
                 sex: k.sex,
                 status: k.status,

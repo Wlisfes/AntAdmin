@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 10:14:03
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-15 13:48:58
+ * @LastEditTime: 2019-06-17 23:23:33
  * @Description: 用户资料编辑弹窗
  -->
 
@@ -19,34 +19,6 @@
         @ok="create"
     >
         <a-form :form="form">
-            <!-- <a-form-item v-bind="formItemLayout" label='手机号'>
-                <a-input
-                    placeholder="请输入手机号"
-                    v-decorator="['phone',{
-                        initialValue: phone,
-                        rules: [
-                            { required: true, message: '手机号不能为空！' },
-                            { pattern: /^1([38][0-9]|4[012345789]|5[0-3,4-9]|6[6]|7[01345678]|9[89])\d{8}$/, message: '必须是符合格式的手机号码！' }
-                        ]
-                    }]"
-                >
-                    <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
-                </a-input>
-            </a-form-item> -->
-            <a-form-item v-bind="formItemLayout" label='密码'>
-                <a-input
-                    placeholder="请输入密码"
-                    v-decorator="['password',{
-                        initialValue: password,
-                        rules: [
-                            { required: true, message: '密码不能为空！' },
-                            { min: 6, max: 20, message: '密码长度必须是4~20位之间！' }
-                        ]
-                    }]"
-                >
-                    <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
-                </a-input>
-            </a-form-item>
             <a-form-item v-bind="formItemLayout" label="账户类型">
                 <a-radio-group
                     v-decorator="['admin',{
@@ -126,10 +98,6 @@ export default {
         phone: {
             type: Number,
             default: () => 0
-        },
-        password: {
-            type: String,
-            default: () => ''
         },
         admin: {
             type: String,
