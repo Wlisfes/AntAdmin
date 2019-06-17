@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-12 23:45:01
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-14 21:53:06
+ * @LastEditTime: 2019-06-17 23:26:28
  * @Description: 笔记编辑弹窗
  -->
 
@@ -11,7 +11,7 @@
     <a-modal
         style="top: 20px;"
         :visible="visible"
-        title='新增笔记'
+        title='编辑笔记'
         cancelText="取消"
         okText='保存'
         :width='1200'

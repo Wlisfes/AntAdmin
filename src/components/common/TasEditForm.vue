@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-09 13:34:25
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-11 13:51:02
+ * @LastEditTime: 2019-06-17 23:27:02
  * @Description: 标签编辑弹窗
  -->
 
@@ -13,7 +13,7 @@
         title='编辑标签'
         cancelText="取消"
         okText='保存'
-        :width='640'
+        :width='750'
         @cancel="cancel"
         @ok="create"
     >
