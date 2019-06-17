@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-16 11:31:15
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-16 23:23:28
+ * @LastEditTime: 2019-06-17 23:42:52
  * @Description: github相关
  */
 
@@ -47,7 +47,12 @@ export const DelGitHubFn = props => {
 
 
 //跟新友链信息
-export const UpdateGitHub = props => {
+export const UpdateGitHubFn = props => {
     return http.post(props, `/update/github`)
 }
 
+
+//条件查询
+export const FindGitHubFn = props => {
+    return http.post(props, `/find/github`)
+}

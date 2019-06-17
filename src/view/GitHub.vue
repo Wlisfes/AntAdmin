@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 17:53:51
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-16 23:51:47
+ * @LastEditTime: 2019-06-17 23:45:31
  * @Description: 友链管理>GitHub
  -->
 
@@ -225,7 +225,7 @@ export default {
     methods: {
         //查询回调
         findCollBack(e) {
-            this.FindWhereBookFn(e)
+            this.FindGitHubFn(e)
         },
         //新增回调
         pluscollBack() {
@@ -234,6 +234,20 @@ export default {
         //重置回调
         replycollBack() {
             this.getGitHubListFn()
+        },
+        //查询
+        async FindGitHubFn(findData) {
+            try {
+                this.loading = true
+                let res = await this.Api.FindGitHubFn({ ...findData })
+                if(res.code === 200) {
+                    this.TableData = this.TableMap(res.data)
+                    this.$notification.success({ message: '查找成功！', duration: 1.5, description: '' })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
         },
         //新增保存
         async CreateGitHubFn({ address,blog,description,github,githubName,name,sex,weights,githubAvatar }) {
@@ -274,7 +288,7 @@ export default {
             try {
                 this.loading = true
                 this.editModal.visible = false
-                let res = await this.Api.UpdateGitHub({
+                let res = await this.Api.UpdateGitHubFn({
                     id,githubName,github,sex,name,address,
                     description,githubAvatar,weights,blog
                 })
