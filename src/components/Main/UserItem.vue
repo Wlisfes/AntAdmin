@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 19:04:02
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-16 16:01:49
+ * @LastEditTime: 2019-06-18 21:38:30
  * @Description: 用户信息展示组件
  -->
 
@@ -43,7 +43,7 @@ export default {
         }
     },
     created() {
-        console.log(this.get_Token)
+        
     },
     computed: {
         ...mapGetters([

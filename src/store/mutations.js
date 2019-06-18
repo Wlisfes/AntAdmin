@@ -1,5 +1,4 @@
-// import { CRYPTO_KEY } from '@/lib/cofn'
-// import { aesEncrypt } from '@/lib/Auxli'
+import { setStore,removesetStore } from '@/lib/Auxli'
 
 const mutations = {
     set_openKeys: (state, key) => {
@@ -16,6 +15,12 @@ const mutations = {
 
     set_Token(state, token) {
         state.Token = token
+        if(token) {
+            setStore(token)
+        }
+        else {
+            removesetStore()
+        }
     }
 
 }

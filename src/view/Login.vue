@@ -100,7 +100,6 @@ export default {
                 var res = await this.Api.loginFn({ phone,password })
                 if (res.code === 200) {
                     this.set_Token(res.data)
-                    this.Aux.setStore(res.data)
                     this.$notification.success({ message: '登录成功！', description: '', duration: 1.5 })
                     this.$router.replace({ path: `/` })
                 }

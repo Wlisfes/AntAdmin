@@ -28,7 +28,7 @@
                 >
                     <span class="action ant-dropdown-link user-dropdown-menu">
                         <a-avatar class="avatar" :src="get_Token.avatar || 'http://admin.lisfes.cn/server/static/assets/album/515b52bc8f191.png'"/>
-                        <span>情雨随风</span>
+                        <span v-html="get_Token.nickname"></span>
                     </span>
                     <a-menu slot="overlay" style="width: 160px;">
                         <a-menu-item @click="select('person')">
@@ -101,7 +101,8 @@ export default {
         ...mapMutations([
             'set_openKeys',
             'set_selectedKeys',
-            'set_defaultSelectedKeys'
+            'set_defaultSelectedKeys',
+            'set_Token'
         ]),
         iScoll() {
             this.$emit('iscoll', !this.collapsed)
@@ -143,7 +144,7 @@ export default {
                 let res = await this.Api.logOutFn()
 
                 if(res.code === 200) {
-                    this.Aux.removesetStore()
+                    this.set_Token(null)
                     this.$notification.success({ message: '退出成功！', duration: 1.5, description: '' })
                     this.$router.replace({ path: `/login` })
                 }
