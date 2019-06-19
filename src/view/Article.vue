@@ -77,7 +77,7 @@ export default {
             this.visible = true
         },
         //新增文章
-        async createBook({ title,tags,weights,read,suki,description }) {
+        async createBook({ name,tags,weights,read,suki,description }) {
             try {
                 this.visible = false
                 this.$message.loading('数据发送中......', 0)
@@ -86,7 +86,7 @@ export default {
                     Text: this.mark.Text,
                     Textvalue: this.mark.Textvalue,
                     picture: this.pictureUrl,
-                    title,
+                    name,
                     tags,
                     weights,
                     read,
@@ -109,9 +109,9 @@ export default {
             try {
                 let res = await upload(resData, '/upload')
                 if(res.code === 200) {
-                    this.pictureUrl = `http://localhost:9800${res.data.pictureUrl}`
+                    // this.pictureUrl = `http://localhost:9800${res.data.pictureUrl}`
                     // this.pictureUrl = `http://admin.lisfes.cn/server/static${res.data.pictureUrl}`
-                    // this.pictureUrl = res.data.pictureUrl
+                    this.pictureUrl = res.data.pictureUrl
                 }
             } catch (error) {
                 console.error(error)

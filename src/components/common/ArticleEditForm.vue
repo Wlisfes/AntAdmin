@@ -1,37 +1,40 @@
 <!--
  * @Author: 情雨随风
- * @Date: 2019-06-18 22:34:15
+ * @Date: 2019-06-12 23:45:01
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-19 23:28:41
- * @Description: 文章新增弹窗
+ * @LastEditTime: 2019-06-19 23:49:37
+ * @Description: 笔记编辑弹窗
  -->
 
 
 <template>
     <a-modal
+        style="top: 20px;"
         :visible="visible"
-        title='新增文章'
+        title='编辑文章'
         cancelText="取消"
         okText='保存'
-        :width='750'
+        :width='1200'
         @cancel="cancel"
         @ok="create"
     >
         <a-form :form="form">
-            <a-form-item v-bind="formItemLayout" label='文章名称'>
+            <a-form-item v-bind="formItemLayout" label='笔记名称' style="margin-bottom: 10px;">
                 <a-input
                     placeholder="请输入文章名称"
                     v-decorator="['name',{
+                        initialValue: name,
                         rules: [{ required: true, message: '请输入文章名称!' }],
                     }]"
                 />
             </a-form-item>
-            <a-form-item v-bind="formItemLayout" label="类别标签">
+            <a-form-item v-bind="formItemLayout" label="类别标签" style="margin-bottom: 10px;">
                 <a-select
                     style="max-width: 100%; width: 100%;"
                     mode="multiple"
                     placeholder="请选择类别标签"
                     v-decorator="['tags',{
+                        initialValue: tags,
                         rules: [{ required: true, message: '请选择类别标签!' }],
                     }]"
                 >
@@ -42,7 +45,7 @@
                     >{{ ks.name }}</a-select-option>
                 </a-select>
             </a-form-item>
-            <a-form-item v-bind="formItemLayout" label="权重">
+            <a-form-item v-bind="formItemLayout" label="权重" style="margin-bottom: 10px;">
                 <el-input-number
                     controls-position="right"
                     :min="1"
@@ -50,11 +53,11 @@
                     size="small"
                     :precision="0"
                     v-decorator="['weights',{
-                        initialValue: 1
+                        initialValue: weights
                     }]"
                 ></el-input-number>
             </a-form-item>
-            <a-form-item v-bind="formItemLayout" label="阅读数">
+            <a-form-item v-bind="formItemLayout" label="阅读数" style="margin-bottom: 10px;">
                 <el-input-number
                     controls-position="right"
                     :min="1"
@@ -62,11 +65,11 @@
                     size="small"
                     :precision="0"
                     v-decorator="['read',{
-                        initialValue: 1
+                        initialValue: read
                     }]"
                 ></el-input-number>
             </a-form-item>
-            <a-form-item v-bind="formItemLayout" label="点赞数">
+            <a-form-item v-bind="formItemLayout" label="点赞数" style="margin-bottom: 10px;">
                 <el-input-number
                     controls-position="right"
                     :min="1"
@@ -74,29 +77,79 @@
                     size="small"
                     :precision="0"
                     v-decorator="['suki',{
-                        initialValue: 1
+                        initialValue: suki
                     }]"
                 ></el-input-number>
             </a-form-item>
-            <a-form-item v-bind="formItemLayout" label='描述'>
+            <a-form-item v-bind="formItemLayout" label='描述' style="margin-bottom: 10px;">
                 <a-textarea
-                    placeholder="请输入文章描述"
-                    :rows="4"
+                    placeholder="请输入标签描述"
+                    :rows="3"
                     v-decorator="['description',{
-                        rules: [{ required: true, message: '请输入文章描述!' }],
+                        initialValue: description,
+                        rules: [{ required: true, message: '请输入标签描述!' }],
                     }]"
                 ></a-textarea>
             </a-form-item>
         </a-form>
+
+        <meditor
+            ref="meditor"
+            :showSave="false"
+            :Textvalue="Textvalue"
+            :height="400"
+            @save="save"
+        ></meditor>
     </a-modal>
 </template>
 
 <script>
+import meditor from '@/components/Upload/meditor'
 export default {
     props: {
         visible: {
             type: Boolean,
-            default: () => true
+            default: () => false
+        },
+        id: {
+            type: String,
+            default: () => ''
+        },
+        name: {
+            type: String,
+            default: () => ''
+        },
+        weights: {
+            type: Number,
+            default: () => 1
+        },
+        description: {
+            type: String,
+            default: () => ''
+        },
+        tags: {
+            type: Array,
+            default: () => []
+        },
+        Text: {
+            type: String,
+            default: () => ''
+        },
+        Textvalue: {
+            type: String,
+            default: () => ''
+        },
+        theme: {
+            type: String,
+            default: () => 'OneDark'
+        },
+        read: {
+            type: Number,
+            default: () => 1
+        },
+        suki: {
+            type: Number,
+            default: () => 1
         }
     },
     data() {
@@ -109,10 +162,22 @@ export default {
                 },
                 wrapperCol: {
                     xs: { span: 24 },
-                    sm: { span: 21 }
+                    sm: { span: 16 }
                 },
             },
-            tagse: []
+            tagse: [],
+
+            //编辑器配置
+            markdown: {
+                mode: 1,
+                autoSave: false,
+                initialValue: ``,
+                Text: '',
+                theme: 'OneDark'
+            },
+
+            //编辑好的数据
+            model: null
         }
     },
     created() {
@@ -135,22 +200,22 @@ export default {
                     color: h.color,
                     name: h.name
                 }))
-  
-                this.$emit('create', { ...values })
+    
+                this.model = values
+                this.$refs.meditor.handleSave()
                 this.form.resetFields();
             });
         },
-        isNumberValue(number) {
-            return {
-                validateStatus: 'error',
-                errorMsg: '权重最小为1，最大为99！',
-            }
-        },
-        handleNumberChange (value) {
-            this.number = {
-                ...this.isNumberValue(value),
-                value,
-            }
+        //编辑器保存事件
+        save(e) {
+            let model = this.model
+            this.$emit('create', {
+                id: this.id,
+                Text: e.html,
+                theme: e.theme,
+                Textvalue: e.value,
+                ...model
+            })
         },
         //标签列表
         async getTagsOpenListFn() {
@@ -164,6 +229,9 @@ export default {
                 console.log(error)
             }
         }
+    },
+    components: {
+        meditor
     }
 }
 </script>
@@ -171,3 +239,7 @@ export default {
 <style lang="stylus" scoped>
 
 </style>
+
+
+
+
