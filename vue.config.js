@@ -7,6 +7,7 @@ module.exports = {
         config.resolve.alias
             .set('@', resolve('src'))
     },
+    productionSourceMap: false,
     devServer: {
         port: 8800,
         proxy: {
