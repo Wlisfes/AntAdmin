@@ -2,7 +2,7 @@
  * @Date: 2019-06-11 09:54:00
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-16 15:48:19
+ * @LastEditTime: 2019-06-20 23:01:46
  * @Description: Vue过滤器辅助函数
  */
 
@@ -24,7 +24,7 @@ export const adminText = admin => {
            admin = 'same' ? '测试管理员' : '游客账户'
 }
 
-
+//时间转化
 export const Time = date => {
     let t = date.slice(0, date.indexOf('T'))
     let m = date.slice(date.indexOf('T') + 1, date.length - 1)

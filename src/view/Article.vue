@@ -151,7 +151,7 @@ export default {
             bottom 64px
             .Update {
                 width: 180px;
-                height: 140px;
+                height: 180px;
                 border: 1px dashed #d9d9d9;
                 border-radius 4px
                 cursor pointer

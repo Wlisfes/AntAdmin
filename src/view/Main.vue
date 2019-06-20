@@ -11,11 +11,11 @@
         <user-item></user-item>
         <div class="Back-Content">
             <a-row :gutter="16">
-                <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
+                <a-col :xl="14" :lg="24" :md="24" :sm="24" :xs="24">
                     <Chain></Chain>
                     <Trend></Trend>
                 </a-col>
-                <a-col :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
+                <a-col :xl="10" :lg="24" :md="24" :sm="24" :xs="24">
                     <Chart></Chart>
                 </a-col>
             </a-row>
