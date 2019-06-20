@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-19 00:00:45
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-20 00:01:47
+ * @LastEditTime: 2019-06-20 17:31:27
  * @Description: 文章操作接口
  */
 
@@ -46,3 +46,7 @@ export const UpdateArticle = props => {
 }
 
 
+//条件查询
+export const FindWhereArticleFn = props => {
+    return http.post(props, `/find/article`)
+}

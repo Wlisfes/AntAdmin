@@ -168,7 +168,7 @@ export default {
     methods: {
         //查询回调
         findCollBack(e) {
-            // this.FindWhereBookFn(e)
+            this.FindWhereArticleFn(e)
         },
         //新增回调
         pluscollBack() {
@@ -179,12 +179,12 @@ export default {
             this.__getArticleListFn()
         },
         //查询
-        async FindWhereBookFn(findData) {
+        async FindWhereArticleFn(findData) {
             try {
                 this.loading = true
-                let res = await this.Api.FindWhereBookFn({ ...findData })
+                let res = await this.Api.FindWhereArticleFn({ ...findData })
                 if(res.code === 200) {
-                    this.TableBata = this.TableMap(res.data)
+                    this.TableData = this.TableMap(res.data)
                     this.$notification.success({ message: '查找成功！', duration: 1.5, description: '' })
                 }
             } catch (error) {
