@@ -69,7 +69,6 @@ export default {
         overflow-x auto
         .Content-View {
             min-height 100%
-            min-width 1164px
             margin 0 24px
             display flex
             flex-direction column

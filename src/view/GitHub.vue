@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 17:53:51
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-17 23:45:31
+ * @LastEditTime: 2019-06-20 21:50:54
  * @Description: 友链管理>GitHub
  -->
 
@@ -389,6 +389,7 @@ export default {
 <style lang="stylus" scoped>
 .root {
     margin 0 -24px
+    min-width 1212px
     flex 1
     display flex
     flex-direction column

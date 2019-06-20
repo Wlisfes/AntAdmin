@@ -133,6 +133,7 @@ export default {
 <style lang="stylus" scoped>
 .root {
     margin 0 -24px
+    min-width 710px
     flex 1
     display flex
     flex-direction column

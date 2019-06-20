@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 17:58:46
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-15 18:46:30
+ * @LastEditTime: 2019-06-20 21:41:53
  * @Description: 账户>个人中心
  -->
 
@@ -11,7 +11,19 @@
     <div class="root">
         <Head title="个人中心"></Head>
         <div class="Back-Content">
-            个人中心
+            <a-row :gutter="24">
+                <a-col :md="24" :lg="7">
+                    1
+
+                    
+
+                </a-col>
+                <a-col :md="24" :lg="17">
+
+                
+2
+                 </a-col>
+            </a-row>
         </div>
     </div>
 </template>

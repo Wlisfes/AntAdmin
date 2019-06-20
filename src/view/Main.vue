@@ -43,6 +43,7 @@ export default {
 <style lang="stylus" scoped>
 .Main {
     margin 0 -24px
+    min-width 620px
     flex 1
     display flex
     flex-direction column

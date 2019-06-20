@@ -2,31 +2,36 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 19:04:02
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-18 21:38:30
+ * @LastEditTime: 2019-06-20 22:03:48
  * @Description: 用户信息展示组件
  -->
 
 
 <template>
     <div class="UserStyle">
-        <!-- <a-avatar class="Avatar" :src="'http://localhost:9800' + get_Token.avatar" /> -->
-        <a-avatar class="Avatar" :src="get_Token.avatar" />
-        <div class="title-box">
-            <p class="title" v-html="get__timeFix + '，' + get_Token.nickname + '，' + get__welcome"></p>
-            <span>菜鸟前端工程师 | 正棋集团 - 某某某事业群 - VUE平台</span>
-        </div>
-        <a-row class="TableRow">
-            <a-col :span="8" class="TableCol">
-                <span class="TableIcon">项目数</span>
-                <span class="Text">8</span>
+        <a-row :gutter="16">
+            <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24" style="display: flex;">
+                <a-avatar class="Avatar" :src="get_Token.avatar" />
+                <div class="title-box">
+                    <p class="title" v-html="get__timeFix + '，' + get_Token.nickname + '，' + get__welcome"></p>
+                    <span>菜鸟前端工程师 | 正棋集团 - 某某某事业群 - VUE平台</span>
+                </div>
             </a-col>
-            <a-col :span="8" class="TableCol">
-                <span class="TableIcon">标签数</span>
-                <span class="Text">15</span>
-            </a-col>
-            <a-col :span="8" class="TableCol">
-                <span class="TableIcon">文章、笔记数</span>
-                <span class="Text">16</span>
+            <a-col :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
+                <a-row class="TableRow">
+                    <a-col :span="8" class="TableCol">
+                        <span class="TableIcon">项目数</span>
+                        <span class="Text">8</span>
+                    </a-col>
+                    <a-col :span="8" class="TableCol">
+                        <span class="TableIcon">标签数</span>
+                        <span class="Text">15</span>
+                    </a-col>
+                    <a-col :span="8" class="TableCol">
+                        <span class="TableIcon">文章、笔记数</span>
+                        <span class="Text">16</span>
+                    </a-col>
+                </a-row>
             </a-col>
         </a-row>
     </div>
@@ -63,7 +68,7 @@ export default {
 .UserStyle {
     padding 16px 24px
     background #ffffff
-    display flex
+    // display flex
     .Avatar {
         border-radius 72px
         display block

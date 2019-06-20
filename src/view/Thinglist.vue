@@ -348,6 +348,7 @@ export default {
 <style lang="stylus" scoped>
 #Thin {
     margin 0 -24px
+    min-width 1212px
     flex 1
     display flex
     flex-direction column

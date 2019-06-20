@@ -315,6 +315,7 @@ export default {
 
 <style lang="stylus" scoped>
 .root {
+    min-width 1212px
     margin 0 -24px
     flex 1
     display flex
