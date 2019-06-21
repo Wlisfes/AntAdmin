@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-06 23:40:27
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-11 22:08:39
+ * @LastEditTime: 2019-06-22 00:03:18
  * @Description: 项目操作接口
  */
 
@@ -51,3 +51,8 @@ export const UpdateTaske = props => {
     return http.post(props, `/update/taske`)
 }
 
+
+//获取用户对应的笔记
+export const UidTaske = props => {
+    return http.get(props, `/uid/taske`)
+}

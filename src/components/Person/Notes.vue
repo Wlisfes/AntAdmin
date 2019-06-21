@@ -2,8 +2,8 @@
  * @Author: 情雨随风
  * @Date: 2019-06-20 22:24:37
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-22 00:28:39
- * @Description: 个人中心的文章
+ * @LastEditTime: 2019-06-22 00:03:43
+ * @Description: 个人中心的笔记
  -->
 
 
@@ -16,11 +16,6 @@
         :dataSource="TableData"
     >
         <a-list-item :key="item.id" slot="renderItem" slot-scope="item">
-            <template slot="actions">
-                <icon-text type="eye" :text="item.read" />
-                <icon-text type="like-o" :text="item.suki" />
-                <icon-text type="message" text="0" />
-            </template>
             <a-list-item-meta>
                 <a slot="title">{{ item.name }}</a>
                 <template slot="description">
@@ -37,7 +32,7 @@
                 <div class="antd-pro-components-article-list-content-index-listContent">
                     <div class="description" v-html="item.description"></div>
                     <div class="extra">
-                        <a-avatar :src="item.picture" size="small" />
+                        <a-avatar :src="get_Token.avatar" size="small" />
                         <a>{{ item.author }}</a>
                         <em>{{ item.createdAt | Time | TimeEnd }}</em>
                     </div>
@@ -56,10 +51,11 @@
 </template>
 
 <script>
-import IconText from './IconText'
+import IconText from './IconText';
 import { Time } from '@/lib/filters';
+import { mapGetters } from 'vuex'
 export default {
-    name: 'Article',
+    name: 'Notes',
     data () {
         return {
             loading: true,
@@ -70,7 +66,7 @@ export default {
         }
     },
     mounted () {
-        this.UidArticle()
+        this.UidBook()
 
     },
     filters: {
@@ -79,10 +75,16 @@ export default {
             return v.slice(0, v.length - 4)
         }
     },
+    computed: {
+        ...mapGetters([
+            'get_Token'
+        ])
+    },
     methods: {
-        async UidArticle() {
+        async UidBook() {
             try {
-                let res = await this.Api.UidArticle()
+                this.loading = true
+                let res = await this.Api.UidBook()
                 if(res.code === 200) {
                     if(res.data.length < 6) {
                         this.TableData = res.data
@@ -92,7 +94,6 @@ export default {
                         this.TableData = allties[0]
                         this.alltiesData = allties
                     }
-                    
                 }
             } catch (error) {
                 console.error(error)
