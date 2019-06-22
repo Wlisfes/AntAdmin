@@ -116,10 +116,37 @@ export default [
             {
                 path: '/setting',
                 name: 'setting',
+                redirect: '/setting/basic',
                 meta: {
                     title: '账户设置'
                 },
-                component: () => import('../view/Setting.vue')
+                component: () => import('../view/Setting.vue'),
+                children: [
+                    {
+                        path: '/setting/basic',
+                        name: 'basic',
+                        meta: {
+                            title: '基本设置'
+                        },
+                        component: () => import('@/components/Setting/Basic.vue')
+                    },
+                    {
+                        path: '/setting/safety',
+                        name: 'safety',
+                        meta: {
+                            title: '安全设置'
+                        },
+                        component: () => import('@/components/Setting/Safety.vue')
+                    },
+                    {
+                        path: '/setting/theme',
+                        name: 'theme',
+                        meta: {
+                            title: '个性化'
+                        },
+                        component: () => import('@/components/Setting/Theme.vue')
+                    }
+                ]
             }
         ]
     }

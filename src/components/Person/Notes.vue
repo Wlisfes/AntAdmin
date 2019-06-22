@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-20 22:24:37
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-22 00:03:43
+ * @LastEditTime: 2019-06-22 13:01:36
  * @Description: 个人中心的笔记
  -->
 
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import IconText from './IconText';
 import { Time } from '@/lib/filters';
 import { mapGetters } from 'vuex'
 export default {
@@ -127,9 +126,6 @@ export default {
                 })
             }, 1500)
         }
-    },
-    components: {
-        IconText
     }
 }
 </script>
