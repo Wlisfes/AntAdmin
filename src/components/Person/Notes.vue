@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-20 22:24:37
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-22 13:01:36
+ * @LastEditTime: 2019-06-22 22:27:27
  * @Description: 个人中心的笔记
  -->
 
@@ -14,6 +14,7 @@
         :loading="loading"
         itemLayout="vertical"
         :dataSource="TableData"
+        :locale="{ emptyText: '暂无数据' }"
     >
         <a-list-item :key="item.id" slot="renderItem" slot-scope="item">
             <a-list-item-meta>

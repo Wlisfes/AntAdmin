@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-20 22:24:37
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-22 00:24:53
+ * @LastEditTime: 2019-06-22 22:27:20
  * @Description: 个人中心的项目
  -->
 
@@ -14,6 +14,7 @@
         :loading="loading"
         itemLayout="vertical"
         :dataSource="TableData"
+        :locale="{ emptyText: '暂无数据' }"
     >
         <a-list-item :key="item.id" slot="renderItem" slot-scope="item">
             <template slot="actions">
@@ -93,7 +94,7 @@ export default {
                         this.TableData = res.data
                     }
                     else {
-                        let allties = this.sliceArray(v, 5)
+                        let allties = this.sliceArray(res.data, 5)
                         this.TableData = allties[0]
                         this.alltiesData = allties
                     }
