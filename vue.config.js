@@ -22,6 +22,16 @@ module.exports = {
             enforce: true
         }
         config.optimization.splitChunks(splitOptions)
+        // // 移除 prefetch 插件
+        config.plugins.delete("prefetch");
+        // // 移除 preload 插件
+        config.plugins.delete('preload');
+        // // 压缩代码
+        config.optimization.minimize(true);
+        // // 分割代码
+        config.optimization.splitChunks({
+            chunks: 'all'
+        })
         config.resolve.alias
             .set('@', resolve('src'))
     },
