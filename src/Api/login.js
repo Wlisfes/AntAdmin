@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-05 23:03:23
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-15 18:17:36
+ * @LastEditTime: 2019-06-22 17:56:23
  * @Description: 登录机制接口
  */
 
@@ -51,3 +51,8 @@ export const getUserListFn = props => {
     return http.get(props, `/all/user`)
 }
 
+
+//根据登录用修改密码
+export const UpdateUidPssw = props => {
+    return http.post(props, `/uid/userpssw`)
+}

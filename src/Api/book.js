@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-12 22:35:56
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-13 00:26:25
+ * @LastEditTime: 2019-06-21 23:44:44
  * @Description: 笔记操作接口
  */
 
@@ -52,3 +52,7 @@ export const UpdateBook = props => {
 }
 
 
+//获取用户对应的笔记
+export const UidBook = props => {
+    return http.get(props, `/uid/book`)
+}

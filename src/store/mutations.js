@@ -21,6 +21,14 @@ const mutations = {
         else {
             removesetStore()
         }
+    },
+
+    set_theme(state, theme) {
+        state.theme = theme
+    },
+
+    set_SettingMenu(state, SettingMenu) {
+        state.SettingMenu = SettingMenu
     }
 
 }

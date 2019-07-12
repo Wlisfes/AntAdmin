@@ -10,7 +10,13 @@ const state = {
     selectedKeys: ['0-1'],
 
     //用户登录信息
-    Token: null
+    Token: null,
+
+    //主题
+    theme: "light",
+
+    //账户设置界面子路由
+    SettingMenu: ['1']
 }
 
 

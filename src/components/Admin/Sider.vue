@@ -12,7 +12,7 @@
         :trigger="null"
         :collapsible="true"
         :width="240"
-        theme="dark"
+        :theme="get_theme"
         :collapsed="collapsed"
         breakpoint="xl"
         @breakpoint="iSpoint"
@@ -22,7 +22,7 @@
                 <img :src="get_Token.avatar || 'http://admin.lisfes.cn/server/static/assets/album/515b52bc8f191.png'"/>
             </router-link>
         </div>
-        <a-menu theme="dark" 
+        <a-menu :theme="get_theme" 
                 mode="inline" 
                 :openKeys="get_openKeys"
                 :defaultSelectedKeys="get_defaultSelectedKeys"
@@ -127,7 +127,8 @@ export default {
             'get_openKeys',
             'get_defaultSelectedKeys',
             'get_selectedKeys',
-            'get_Token'
+            'get_Token',
+            'get_theme'
         ]),
     },
     methods: {

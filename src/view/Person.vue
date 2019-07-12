@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2019-06-15 17:58:46
  * @LastEditors: 情雨随风
- * @LastEditTime: 2019-06-20 23:49:26
+ * @LastEditTime: 2019-06-22 00:32:00
  * @Description: 账户>个人中心
  -->
 
@@ -14,23 +14,15 @@
             <a-row :gutter="16">
                 <a-col :md="24" :lg="7">
                     <a-card :bordered="false">
-                    <div class="account-center-avatarHolder">
-                        <div class="avatar">
-                            <img src="https://avatars3.githubusercontent.com/u/32263302?s=460&v=4">
+                        <div class="account-center-avatarHolder">
+                            <div class="avatar">
+                                <img :src="get_Token.avatar">
+                            </div>
+                            <div class="username">{{ get_Token.nickname }}</div>
+                            <div class="bio">{{ get_Token.description }}</div>
                         </div>
-                        <div class="username">情雨随风</div>
-                        <div class="bio">海纳百川，有容乃大</div>
-                    </div>
-                    <a-divider/>
-
-                 
-                    <a-divider :dashed="true"/>
-
-    
+                        <a-divider/>
                     </a-card>
-
-                    
-
                 </a-col>
                 <a-col :md="24" :lg="17">
                     <a-card
@@ -41,6 +33,8 @@
                         @tabChange="key => handleTabChange(key, 'noTitleKey')"
                     >
                         <Article v-if="noTitleKey == 'article'"></Article>
+                        <Notes v-if="noTitleKey == 'book'"></Notes>
+                        <Taske v-if="noTitleKey == 'project'"></Taske>
                     </a-card>
                  </a-col>
             </a-row>
@@ -50,7 +44,10 @@
 
 <script>
 import Head from '@/components/common/Head';
-import Article from '../components/Person/Article'
+import Article from '@/components/Person/Article';
+import Notes from '@/components/Person/Notes';
+import Taske from '@/components/Person/Taske';
+import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
@@ -60,9 +57,12 @@ export default {
                 { key: 'project', tab: '项目' }
             ],
             noTitleKey: 'article'
-
-
         }
+    },
+    computed: {
+        ...mapGetters([
+            'get_Token'
+        ])
     },
     methods: {
         handleTabChange (key, type) {
@@ -71,6 +71,8 @@ export default {
     },
     components: {
         Head,
+        Notes,
+        Taske,
         Article
     }
 }
